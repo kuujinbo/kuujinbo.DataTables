@@ -1,0 +1,171 @@
+﻿body { padding-bottom: 76px; }
+h1, .h1 {font-size: 2em;}
+h2, .h2 {font-size: 1.76em;}
+h3, .h3 {font-size: 1.5em;}
+.em-one-point-four { font-size: 1.4em; }
+.em-two { font-size: 2em; }
+.em-four { font-size: 4em; }
+.align-top { vertical-align: top; }
+.margin-10, div.margin-10 > div { margin: 10px; }
+.margin-top-bottom-8{ margin: 8px 0; }
+.margin-lr10 { margin: 0 10px; }
+.margin-tb10, div.margin-tb10 > div { margin: 10px 0; }
+.center { text-align:center;}
+.yellow {color:yellow;}
+/*body {
+    padding: 0 20px;
+}*/
+
+/* ============================================================================
+    START - override default bootstrap styling
+   ============================================================================
+*/
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+fieldset {
+    border: 1px solid #DDD;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+legend {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+    width:auto;
+    font-size: 1.2em;
+}
+/* ============================================================================
+    END - override default bootstrap styling
+   ============================================================================
+*/
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.ui-dialog { z-index: 99999999 !important;}
+.pointer {cursor: pointer; }
+.blue {color: #4285f4; }
+.green {color: green; }
+.red {color: red; }
+td.center { text-align:center; }
+div.dataTables_wrapper div.dataTables_length label,
+div.dataTables_length { display: inline;}
+div.dataTables_wrapper div.dataTables_info { display: inline; margin-left: 4px;}
+.dataTable tfoot { display: table-header-group;}
+.dataTable tfoot th { margin:0 !important; padding:2px 4px !important;}
+
+div.dataTables_wrapper div.dataTables_processing,
+.dataTables_processing {
+    position: absolute !important;
+    top: 0% !important;
+    margin-top: 38px !important;
+    width: 98%;
+    left: 50%;
+    margin-left: -49%;
+    text-align: center;
+    background-color:rgba(0, 0, 0, 0.76);
+    color: #fff;
+    z-index: 99999 !important;
+    border: 2px solid #eaeaea;
+    padding:4em 0;
+}
+h1.dataTablesLoading {
+    font-size: 3.8em !important;
+}
+.dataTables_wrapper { width:100%; }
+.dataTable { width:100% !important; }
+.pagination > li > a, .pagination > li > span {
+    padding:8px !important;
+}
+table.dataTable.compact thead th,
+table.dataTable.compact thead td {
+  padding: 4px 17px 4px 4px;
+}
+table.dataTable.compact tfoot th,
+table.dataTable.compact tfoot td {
+  padding: 5px 2px;
+}
+table.dataTable.compact tbody th,
+table.dataTable.compact tbody td {
+  padding: 5px 2px;
+}
+
+.link-icons { 
+    font-size: 1.1em !important;
+    margin-right: 4px !important;
+    cursor: pointer;
+}
+table.dataTable tbody tr.datatable-select-row, .dataTableSelected {
+  background-color: #ffffcc !important;
+  color:#007f00;
+}
+th span.btn {
+    font-size:1em !important;
+    line-height:1em !important;
+    text-align:center !important; 
+    vertical-align:top !important;
+    padding: 7px !important;
+    margin: 0px 2px !important;
+    cursor: pointer;
+}
+.search-icons {
+    color:#fff;
+    background:#4285f4;
+}
+.search-icons:hover, .search-icons:focus, .focus.search-icons {
+    color:#fff;
+    background:#007f00;
+    border:1px solid #d8d8d8;
+}
+
+.valuePicker {
+    position: absolute;
+    z-index: 88888888;
+    background-color: #fff;
+    border: 1px ridge #eaeaea;
+    outline: none;   /* IE strange lines: focus => overflow-y */ 
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0;
+}
+.valuePickerItem {
+    width: 100%;
+    padding: 4px 8px;
+    box-shadow:
+        1px 1px 0 1px #eaeaea, 
+        1px 0 0 0 #eaeaea inset, 
+        0 1px 0 0 #eaeaea inset;
+}
+
+.spin-infinite {
+    -webkit-animation: spin-infinite .8s infinite linear;
+    -moz-animation: spin-infinite 1s infinite linear;
+    -o-animation: spin-infinite 1s infinite linear;
+    animation: spin-infinite 1s infinite linear;
+}
+@-moz-keyframes spin-infinite {
+  from {-moz-transform: rotate(0deg);}  
+  to {-moz-transform: rotate(360deg);}
+}
+
+@-webkit-keyframes spin-infinite {
+  from {-webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin-infinite {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
