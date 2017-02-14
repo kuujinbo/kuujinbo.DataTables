@@ -9,3 +9,4 @@
 /// <reference path="datatables.bootstrap.js" />
 /// <reference path="jquery-ui-1.12.1.min.js" />
 /// <reference path="jquery-ui-1.12.1.js" />
+/// <reference path="jquerydatatablesindex.js" />

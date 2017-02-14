@@ -133,8 +133,7 @@ TableConfig.prototype = {
         if (n !== null) n.checked = false;
     },
     clearSearchFilters: function() {
-        var selector = this.getSearchFilterSelector()
-        var elements = document.querySelectorAll(selector);
+        var elements = document.querySelectorAll(this.getSearchFilterSelector());
         for (i = 0; i < elements.length; ++i) elements[i].value = '';
 
         this.clearSearchColumns();
@@ -201,7 +200,7 @@ TableConfig.prototype = {
         );
     },
     // handle back button - explicitly set form field value(s)
-    setSearchState: function () {
+    setSearchState: function() {
         var elements = document.querySelectorAll(this.getSearchFilterSelector());
         var columns = this._table.state().columns;
         for (var i = 1; i < columns.length - 1; ++i) {
@@ -300,7 +299,6 @@ TableConfig.prototype = {
             this.jqModalError(msg || this.getXhrErrorMessage());
         }
 
-        console.log('wtf in event listener: ' + this.saveAs);
         this.saveAs(before, fail, always);
     },
     clickCheckAll: function(e) {
@@ -421,22 +419,26 @@ TableConfig.prototype = {
         value picker UI element: server processing - per-column 
         multi-value filter
     ----------------------------------------------------------------- */
-    getValuePickerId: function () {
+    getValuePickerId: function() {
         return 'valuePickerId__' + this._idNo++;
     },
     // flag value picker selected items
-    getValuePickerSelected: function () {
+    getSelectedSelector: function() {
         return 'dataTableSelected';
     },
+    // flag value picker selected items
+    getPickerSelectedSelector: function() {
+        return 'div.' + this.getSelectedSelector();;
+    },
     // store widget id => multiple widgets in DOM
-    getValuePickerIdName: function () { return '_valuePickerIdName:_'; },
+    getValuePickerIdName: function() { return '_valuePickerIdName_'; },
     // store column search term input field selector
-    getSearchColumnIndexName: function () { return '_searchColumnIndexName_'; },
+    getSearchColumnIndexName: function() { return '_searchColumnIndexName_'; },
 
     // add value picker:
     // [1] columnIndex; zero-based
     // [2] stringArray: string items that populate value picker
-    addValuePicker: function (columnIndex, stringArray) {
+    addValuePicker: function(columnIndex, stringArray) {
         var selector = "th > input[data-column-number='" + columnIndex + "']";
 
         var searchInput = document.querySelector(selector);
@@ -451,51 +453,48 @@ TableConfig.prototype = {
             searchInput.addEventListener('focus', this.enterSearchInput.bind(this), false);
             searchInput.addEventListener('blur', this.leaveSearchInput.bind(this), false);
 
-            // create value picker DOM element
+            // value picker DOM element
             var div = document.createElement('div');
-            // add selectable items
-            var inner = '';
-            stringArray.forEach(function (item) {
-                inner += "<div class='valuePickerItem'>" + item + '</div>';
+            // selectable items w/extra container for scrolling
+            var inner = "<div>";
+            stringArray.forEach(function(item) {
+                // class style => jQueryDataTables.css
+                inner += "<div class='pickerItem'>" + item + '</div>';
             });
-            inner += "<input type='button' style='margin:8px;' value='Add / Clear' />";
+            inner += "</div><input type='button' style='margin:8px;' value='Add / Clear' />";
             div.innerHTML = inner;
-            // add listener used to handle value picker show/hide
-            var selectList = div.children;
-            for (var i = 0; i < selectList.length - 1; i++) {
-                selectList[i].addEventListener(
-                    'click', this.toggleValuePickerItem.bind(this), false
-                );
-            }
-            // can't use negative index
-            selectList[selectList.length - 1].addEventListener(
+            div.addEventListener(
+                'click', this.togglePickerItem.bind(this), false
+            );
+
+            var button = div.querySelector('input');
+            button.addEventListener(
                 'click', this.valuePickerButtonClick.bind(this), false
             );
-            selectList[selectList.length - 1][this.getSearchColumnIndexName()] =
+            button[this.getSearchColumnIndexName()] =
                 searchInput[this.getSearchColumnIndexName()];
 
             // need this to make <div> receive focus
             if (this._ieGTE10) div.tabIndex = '0';
 
             div.id = newId;
-
-            // see jQueryDataTables.css
+            // class style => jQueryDataTables.css
             div.classList.add('valuePicker');
-
             div.style.minWidth = searchInput.getBoundingClientRect().width + 'px';
             div.style.display = 'none';
+            var items = div.querySelector('div');
             if (stringArray.length > 10) {
-                div.style.overflowY = 'auto';
-                div.style.height = '276px';
+                items.style.overflowY = 'auto';
+                items.style.height = '276px';
             };
             searchInput.parentNode.appendChild(div);
 
-            // handle value picker show/hide
+            // handle value picker show/hide - **ONLY** works for IE
             div.addEventListener('blur', this.leaveSearchInput.bind(this), false);
         }
     },
     // show value picker when corresponding search text input receives focus
-    enterSearchInput: function (e) {
+    enterSearchInput: function(e) {
         var valuepickerId = e.target[this.getValuePickerIdName()];
 
         var el = document.querySelector('#' + valuepickerId);
@@ -514,44 +513,40 @@ TableConfig.prototype = {
     // allows show/hide based on user page interaction
     // [2] all other browsers set document.activeElement to document.body;
     // must manually close value picker
-    leaveSearchInput: function (e) {
+    leaveSearchInput: function(e) {
         if (this._ieGTE10) {
             var focusEl = document.activeElement;
             var target = e.target;
             var targetName = target.tagName.toLowerCase();
             var valuepickerId = '';
-            // value picker remains visible if any of following receives focus:
-            // [1] previous sibling search input text
-            // [2] selectable child <div> 
-            // [3] input button child
             if (targetName === 'input') {
                 valuepickerId = target[this.getValuePickerIdName()];
             } else if (targetName === 'div') {
                 valuepickerId = target.previousSibling[this.getValuePickerIdName()];
             }
-            console.log('multi: ' + valuepickerId);
 
             if (valuepickerId || focusEl !== null) {
-                if (focusEl.id === valuepickerId
-                    || focusEl.parentElement.id === valuepickerId
-                ) { return; }
+                var picker = document.querySelector('#' + valuepickerId);
+                if (picker !== null && picker.contains(focusEl)) { return; }
                 this.resetValuePicker(valuepickerId);
             }
         }
     },
     // reset any selected items back to **NOT** selected
-    resetValuePicker: function (selector) {
-        var el = document.querySelector('#' + selector);
-        var selectedClass = this.getValuePickerSelected();
-        if (el !== null) {
-            var divChildren = el.children;
-            for (var i = 0; i < divChildren.length; ++i) divChildren[i].classList.remove(selectedClass);
-            el.style.display = 'none';
+    resetValuePicker: function(selector) {
+        var picker = document.querySelector('#' + selector);
+        if (picker !== null) {
+            picker.style.display = 'none';
+            var selected = picker.querySelectorAll(this.getPickerSelectedSelector());
+            if (selected !== null && selected.length > 0) {
+                var selectedClass = this.getSelectedSelector();
+                for (var i = 0; i < selected.length; ++i) selected[i].classList.remove(selectedClass);
+            }
         }
     },
     // [1] get value picker selected values
     // [2] join into single value with separator character for server-side processing
-    valuePickerButtonClick: function (e) {
+    valuePickerButtonClick: function(e) {
         var target = e.target;
         var filterField = document.querySelector(target[this.getSearchColumnIndexName()]);
         if (filterField !== null) {
@@ -559,12 +554,9 @@ TableConfig.prototype = {
             var el = document.querySelector('#' + valuePickerId);
             if (el !== null) {
                 var values = [];
-                var childEls = el.children;
-                var selectedClass = this.getValuePickerSelected();
-                for (var i = 0; i < childEls.length - 1; i++) {
-                    if (childEls[i].classList.contains(selectedClass)) {
-                        values.push(childEls[i].textContent);
-                    }
+                var childEls = el.querySelectorAll(this.getPickerSelectedSelector());
+                for (var i = 0; i < childEls.length; i++) {
+                    values.push(childEls[i].textContent);
                 }
                 filterField.value = values.length > 0
                     ? values.join(this.getConfigValues().multiValueFilterSeparator) : '';
@@ -573,10 +565,11 @@ TableConfig.prototype = {
             this.resetValuePicker(valuePickerId);
         }
     },
-    // [1] toggle selected UI display
-    // [2] set focus on value picker if IE version GTE 10
-    toggleValuePickerItem: function (e) {
-        e.target.classList.toggle(this.getValuePickerSelected());
-        if (this._ieGTE10) e.target.parentNode.focus();
+    togglePickerItem: function(e) {
+        var target = e.target;
+        if (target.classList.contains('pickerItem')) {
+            target.classList.toggle(this.getSelectedSelector());
+            if (this._ieGTE10) target.parentNode.parentNode.focus();
+        }
     }
 };
