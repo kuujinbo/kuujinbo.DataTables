@@ -197,9 +197,7 @@ namespace kuujinbo.DataTables.DataTable
                         for (int j = 0; j < inElements.Length; j++) inElements[j] = inElements[j].ToLower();
                         entities = entities.Where(e =>
                         {
-                            var value = GetPropertyValue(
-                                e, tuple.Item1, tuple.Item2, cache
-                            );
+                            var value = GetPropertyValue(e, tuple.Item1, tuple.Item2, cache);
                             return value != null && inElements.Contains(value.ToString().ToLower());
                         });
                     }
@@ -216,22 +214,14 @@ namespace kuujinbo.DataTables.DataTable
                     if (sortOrder.Direction == ModelBinder.ORDER_ASC)
                     {
                         sortedData = sortedData.ThenBy(e =>
-                        {
-                            var val = GetPropertyValue(
-                                e, tuple.Item1, tuple.Item2, cache
-                            );
-
-                            return val;
-                        });
+                            { return GetPropertyValue(e, tuple.Item1, tuple.Item2, cache); }
+                        );
                     }
                     else
                     {
                         sortedData = sortedData.ThenByDescending(e =>
-                        {
-                            return GetPropertyValue(
-                                e, tuple.Item1, tuple.Item2, cache
-                            );
-                        });
+                            { return GetPropertyValue(e, tuple.Item1, tuple.Item2, cache); }
+                        );
                     }
                 }
             }
@@ -245,9 +235,7 @@ namespace kuujinbo.DataTables.DataTable
                 if (!SaveAs) row.Add(entity.Id);
                 foreach (var info in typeInfo)
                 {
-                    row.Add(GetPropertyValue(
-                        entity, info.Item1, info.Item2, cache
-                    ));
+                    row.Add(GetPropertyValue(entity, info.Item1, info.Item2, cache));
                 }
                 tableData.Add(row);
             }
