@@ -1,0 +1,25 @@
+﻿@model  kuujinbo.DataTables.Table
+@*modal for 'batch' action buttons *@
+<div id='datatable-success-error-modal'></div>
+@*modal for partial view action buttons *@
+<div id='datatable-partial-modal'></div>
+
+<h2>@ViewBag.Title</h2>
+
+@* element id selector used in /scripts/jQueryDataTable *@
+<div id='data-table-actions' style='margin:10px 0;'>
+    @Html.Raw(@Model.ActionButtonsHtml())
+</div>
+
+<table id='jquery-data-table' class='table table-striped compact'>
+    @Html.Raw(@Model.GetTableHtml())
+</table>
+
+@section scripts
+{
+    <script type='text/javascript'>
+        var configValues = @Html.Raw(@Model.GetJavaScriptConfig());
+    </script>
+    @Scripts.Render("~/bundles/dataTables")
+    @Html.Raw(@Model.GetScriptElements())
+}

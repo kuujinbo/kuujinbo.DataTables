@@ -100,22 +100,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTable\ActionButtonTests.cs" />
-    <Compile Include="DataTable\DataTableModelBinderTests.cs" />
-    <Compile Include="DataTable\JqueryDataTablesResultTests.cs" />
-    <Compile Include="DataTable\TableHtmlWriterTests.cs" />
-    <Compile Include="DataTable\TableSettingsTests.cs" />
-    <Compile Include="DataTable\TableTests.cs" />
-    <Compile Include="DataTable\ViewAllPathTests.cs" />
+    <Compile Include="ActionButtonTests.cs" />
+    <Compile Include="DataTableModelBinderTests.cs" />
+    <Compile Include="Export\CsvTests.cs" />
+    <Compile Include="JqueryDataTablesResultTests.cs" />
     <Compile Include="Json\JsonNetResultTests.cs" />
     <Compile Include="Json\JsonNetSerializerTests.cs" />
     <Compile Include="Json\WriteBoolConverterTests.cs" />
     <Compile Include="Json\WriteEnumConverterTests.cs" />
-    <Compile Include="MvcMockHelpers.cs" />
+    <Compile Include="Mvc\MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\DateFormatValidatorTests.cs" />
-    <Compile Include="Utils\EnumUtilsTests.cs" />
-    <Compile Include="Utils\RegexUtilsTests.cs" />
+    <Compile Include="TableHtmlWriterTests.cs" />
+    <Compile Include="TableSettingsTests.cs" />
+    <Compile Include="TableTests.cs" />
+    <Compile Include="ViewAllPathTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -124,8 +122,8 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\kuujinbo.DataTables\kuujinbo.DataTables.csproj">
-      <Project>{7d1fd2bb-9784-4281-90cc-fc7f7617dcfe}</Project>
+    <ProjectReference Include="..\kuujinbo.DataTables\kuujinbo.DataTables\kuujinbo.DataTables.csproj">
+      <Project>{678929b2-9431-4b80-bca0-5098bf8a5b56}</Project>
       <Name>kuujinbo.DataTables</Name>
     </ProjectReference>
   </ItemGroup>

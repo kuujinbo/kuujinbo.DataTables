@@ -5,11 +5,11 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9D6965AC-8E69-483A-8B75-B936F255380C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables.Javascript.Tests", "src\kuujinbo.DataTables.Javascript.Tests\kuujinbo.DataTables.Javascript.Tests.csproj", "{8E701CA5-E1AA-4628-894C-AD196E5F6F7B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables.Tests", "src\kuujinbo.DataTables.Tests\kuujinbo.DataTables.Tests.csproj", "{8D2BC001-38F0-405A-81E9-8331B24AA8E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables", "src\kuujinbo.DataTables\kuujinbo.DataTables.csproj", "{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables.Mvc.Example", "src\kuujinbo.DataTables.Mvc.Example\kuujinbo.DataTables.Mvc.Example.csproj", "{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables", "src\kuujinbo.DataTables\kuujinbo.DataTables\kuujinbo.DataTables.csproj", "{678929B2-9431-4B80-BCA0-5098BF8A5B56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8E701CA5-E1AA-4628-894C-AD196E5F6F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E701CA5-E1AA-4628-894C-AD196E5F6F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E701CA5-E1AA-4628-894C-AD196E5F6F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E701CA5-E1AA-4628-894C-AD196E5F6F7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D2BC001-38F0-405A-81E9-8331B24AA8E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D2BC001-38F0-405A-81E9-8331B24AA8E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2BC001-38F0-405A-81E9-8331B24AA8E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,13 +25,17 @@ Global
 		{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678929B2-9431-4B80-BCA0-5098BF8A5B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678929B2-9431-4B80-BCA0-5098BF8A5B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678929B2-9431-4B80-BCA0-5098BF8A5B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678929B2-9431-4B80-BCA0-5098BF8A5B56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8E701CA5-E1AA-4628-894C-AD196E5F6F7B} = {9D6965AC-8E69-483A-8B75-B936F255380C}
 		{8D2BC001-38F0-405A-81E9-8331B24AA8E7} = {9D6965AC-8E69-483A-8B75-B936F255380C}
 		{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE} = {9D6965AC-8E69-483A-8B75-B936F255380C}
+		{678929B2-9431-4B80-BCA0-5098BF8A5B56} = {9D6965AC-8E69-483A-8B75-B936F255380C}
 	EndGlobalSection
 EndGlobal

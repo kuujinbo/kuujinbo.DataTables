@@ -1,5 +1,4 @@
 ﻿using System;
-using kuujinbo.DataTables.DataTable;
 using kuujinbo.DataTables.Json;
 using Moq;
 using Newtonsoft.Json;
