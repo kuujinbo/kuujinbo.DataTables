@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -149,13 +150,12 @@ namespace kuujinbo.DataTables.DataTable
             RecordsTotal = entities.Count();
 
             // <property name, <objectId, property value>>
-            var cache = new Dictionary<string, IDictionary<int, object>>();
+            var cache = new ConcurrentDictionary<string, ConcurrentDictionary<int, object>>();
 
             IEnumerable<Tuple<PropertyInfo, ColumnAttribute>> typeInfo = GetTypeInfo(typeof(T));
-
             foreach (var info in typeInfo)
             {
-                cache.Add(info.Item1.Name, new Dictionary<int, object>());
+                cache[info.Item1.Name] = new ConcurrentDictionary<int, object>();
             }
 
             // per column search
@@ -297,24 +297,20 @@ namespace kuujinbo.DataTables.DataTable
             T entity,
             PropertyInfo propertyInfo,
             ColumnAttribute columnAttribute,
-            IDictionary<string, IDictionary<int, object>> cache
+            ConcurrentDictionary<string, ConcurrentDictionary<int, object>> cache
         ) where T : class, IIdentifiable
         {
-            object data = null;
+            object data;
             if (cache[propertyInfo.Name].TryGetValue(entity.Id, out data)) return data;
 
             if (IsColection(propertyInfo.PropertyType))
             {
-                var fields = columnAttribute.FieldAccessor.Split('.');
+                var lastField = columnAttribute.FieldAccessor.Split('.').Last();
                 var collection = propertyInfo.GetValue(entity) as IEnumerable<object>;
                 var csvValues = new SortedSet<string>();
                 foreach (var element in collection)
                 {
-                    var value = element;
-                    foreach (var field in fields)
-                    {
-                        value = element.GetType().GetProperty(field).GetValue(element);
-                    }
+                    var value = element.GetType().GetProperty(lastField).GetValue(element);
                     if (value != null)
                     {
                         var stringVal = value.ToString(); 
@@ -342,7 +338,7 @@ namespace kuujinbo.DataTables.DataTable
             {
                 data = propertyInfo.GetValue(entity);
             }
-            cache[propertyInfo.Name][entity.Id] = data;
+            cache[propertyInfo.Name].TryAdd(entity.Id, data);
 
             return data;
         }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace kuujinbo.DataTables.Tests.DataTables
 {
@@ -51,9 +52,11 @@ namespace kuujinbo.DataTables.Tests.DataTables
     {
         Table _table;
         IEnumerable<TestModel> _modelData;
-        public TableTests()
+        private readonly ITestOutputHelper output;
+        public TableTests(ITestOutputHelper output)
         {
             _modelData = new List<TestModel>() { SATO, RAMOS, GREER, KELLY, ITO };
+            this.output = output;
         }
 
         public static readonly TestModel SATO = new TestModel
@@ -65,7 +68,7 @@ namespace kuujinbo.DataTables.Tests.DataTables
             Salary = new TestSalary() { Amount = 80000 },
             Hobbies = new List<TestHobby>() 
             { 
-                new TestHobby() { Name = "2"},
+                new TestHobby() { Name = "hobby 0"},
                 new TestHobby(), 
                 new TestHobby() { Name = "  "}
             }
@@ -79,7 +82,8 @@ namespace kuujinbo.DataTables.Tests.DataTables
             Salary = new TestSalary() { Amount = 70000 },
             Hobbies = new List<TestHobby>() 
             { 
-                new TestHobby() { Name = "4"}, new TestHobby() { Name = "3"}
+                new TestHobby() { Name = "hobby 4"}, 
+                new TestHobby() { Name = "hobby 3"}
             }
         };
         public static readonly TestModel GREER = new TestModel
@@ -90,7 +94,7 @@ namespace kuujinbo.DataTables.Tests.DataTables
             Salary = new TestSalary() { Amount = 40000 },
             Hobbies = new List<TestHobby>() 
             { 
-                new TestHobby() { Name = "5"}
+                new TestHobby() { Name = "hobby 5"}
             }
         };
         public static readonly TestModel KELLY = new TestModel
@@ -101,7 +105,7 @@ namespace kuujinbo.DataTables.Tests.DataTables
             Salary = new TestSalary() { Amount = 76000 },
             Hobbies = new List<TestHobby>() 
             { 
-                new TestHobby() { Name = "8"}
+                new TestHobby() { Name = "hobby 8"}
             }
         };
         public static readonly TestModel ITO = new TestModel
@@ -151,6 +155,7 @@ namespace kuujinbo.DataTables.Tests.DataTables
                         .Select(x => x.Name)),
                     data[i][5]
                 );
+                output.WriteLine("{0} hobbies: {1}", data[i][1], data[i][5]);
             }
         }
 
