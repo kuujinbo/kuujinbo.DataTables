@@ -122,7 +122,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\kuujinbo.DataTables\kuujinbo.DataTables\kuujinbo.DataTables.csproj">
+    <ProjectReference Include="..\kuujinbo.DataTables\kuujinbo.DataTables.csproj">
       <Project>{678929b2-9431-4b80-bca0-5098bf8a5b56}</Project>
       <Name>kuujinbo.DataTables</Name>
     </ProjectReference>

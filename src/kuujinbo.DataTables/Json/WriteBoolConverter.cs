@@ -1,5 +1,4 @@
-﻿using kuujinbo.DataTables;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 /* =======================================================================
  * 'true' and 'false' are obviously not user friendly. use converter to 
  * **serialize** (display only) bool to more meaningful values

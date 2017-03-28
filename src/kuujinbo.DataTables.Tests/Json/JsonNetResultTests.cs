@@ -1,5 +1,4 @@
-﻿using kuujinbo.DataTables.Tests;
-using Moq;
+﻿using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;

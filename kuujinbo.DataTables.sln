@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables.Mvc.Example", "src\kuujinbo.DataTables.Mvc.Example\kuujinbo.DataTables.Mvc.Example.csproj", "{7D1FD2BB-9784-4281-90CC-FC7F7617DCFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables", "src\kuujinbo.DataTables\kuujinbo.DataTables\kuujinbo.DataTables.csproj", "{678929B2-9431-4B80-BCA0-5098BF8A5B56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuujinbo.DataTables", "src\kuujinbo.DataTables\kuujinbo.DataTables.csproj", "{678929B2-9431-4B80-BCA0-5098BF8A5B56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

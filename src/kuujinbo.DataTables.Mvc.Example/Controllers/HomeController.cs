@@ -1,11 +1,11 @@
-﻿using System;
+﻿using kuujinbo.DataTables.Json;
+using kuujinbo.DataTables.Mvc.Example.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using kuujinbo.DataTables.Json;
-using Newtonsoft.Json;
-using kuujinbo.DataTables.Mvc.Example.Models;
 
 namespace kuujinbo.DataTables.Mvc.Example.Controllers
 {
