@@ -54,7 +54,10 @@ namespace kuujinbo.DataTables.Tests
             var result = _fakeController.GetResults(new Table());
             result.ExecuteResult(_fakeController.ControllerContext);
 
-            Assert.Equal("application/json", _fakeController.Response.ContentType);
+            Assert.Equal(
+                DataTableResult.JSON_CONTENT_TYPE, 
+                _fakeController.Response.ContentType
+            );
         }
 
         [Fact]
@@ -73,7 +76,10 @@ namespace kuujinbo.DataTables.Tests
             });
             result.ExecuteResult(_fakeController.ControllerContext);
 
-            Assert.Equal(DataTableResult.CONTENT_TYPE, _fakeController.Response.ContentType);
+            Assert.Equal(
+                DataTableResult.CSV_CONTENT_TYPE, 
+                _fakeController.Response.ContentType
+            );
         }
     }
 }

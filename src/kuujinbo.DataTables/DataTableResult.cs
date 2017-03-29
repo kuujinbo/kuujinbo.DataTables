@@ -1,23 +1,21 @@
-﻿using kuujinbo.DataTables.Json;
-using Newtonsoft.Json;
-/* ============================================================================
+﻿/* ============================================================================
  * convenience class to write JqueryDataTables results in following formats:
  * -- JSON      => XHR call for MVC view
  * -- binary    => excel file dump
  * ============================================================================
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using kuujinbo.DataTables.Export;
+using kuujinbo.DataTables.Json;
 
 namespace kuujinbo.DataTables
 {
     public sealed class DataTableResult : ActionResult
     {
-        public static readonly string CONTENT_TYPE = "text/csv";
+        public static readonly string CSV_CONTENT_TYPE = "text/csv";
+        public static readonly string JSON_CONTENT_TYPE = "application/json";
         public static readonly string FILENAME = string.Format("{0:yyyyMMdd-HHmm}.csv", DateTime.Now);
 
         private ITable _table;
@@ -34,7 +32,7 @@ namespace kuujinbo.DataTables
             HttpResponseBase response = context.HttpContext.Response;
             if (_table.SaveAs)
             {
-                response.ContentType = CONTENT_TYPE;
+                response.ContentType = CSV_CONTENT_TYPE;
                 response.AddHeader(
                     "Content-Disposition",
                     string.Format("attachment; filename={0}", FILENAME)
@@ -45,7 +43,7 @@ namespace kuujinbo.DataTables
             }
             else
             {
-                response.ContentType = "application/json";
+                response.ContentType = JSON_CONTENT_TYPE;
                 response.Write(new JsonNetSerializer().Get(
                     new
                     {
