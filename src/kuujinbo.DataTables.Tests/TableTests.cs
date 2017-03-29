@@ -6,10 +6,7 @@ using Xunit.Abstractions;
 
 namespace kuujinbo.DataTables.Tests
 {
-    /* --------------------------------------------------------------------
-     * test model
-     * --------------------------------------------------------------------
-     */
+    #region test models
     public class TestModel : IIdentifiable
     {
         public TestModel()
@@ -42,13 +39,12 @@ namespace kuujinbo.DataTables.Tests
     {
         public string Name { get; set; }
     }
+    #endregion
 
-    /* --------------------------------------------------------------------
-     * model data and DataTableColumnAttribute
-     * --------------------------------------------------------------------
-     */
     public class TableTests
     {
+        #region test class/setup
+
         Table _table;
         IEnumerable<TestModel> _modelData;
         private readonly ITestOutputHelper output;
@@ -157,7 +153,10 @@ namespace kuujinbo.DataTables.Tests
                 output.WriteLine("{0} hobbies: {1}", data[i][1], data[i][5]);
             }
         }
+        #endregion
 
+
+        #region tests
         [Fact]
         public void ShowCheckboxColumn_WithoutActionButtons_ReturnsFalse()
         {
@@ -374,5 +373,6 @@ namespace kuujinbo.DataTables.Tests
             Assert.Equal("Salary", headerRow.ElementAt(3));
             Assert.Equal("Hobbies", headerRow.ElementAt(4));
         }
+        #endregion
     }
 }

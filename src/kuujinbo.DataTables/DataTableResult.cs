@@ -8,6 +8,7 @@ using Newtonsoft.Json;
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using kuujinbo.DataTables.Export;
@@ -39,11 +40,8 @@ namespace kuujinbo.DataTables
                     string.Format("attachment; filename={0}", FILENAME)
                 );
 
-                var json = new JsonNetSerializer().Get(_table.Data, true);
-
-                var data = JsonConvert.DeserializeObject<List<List<object>>>(json);
-                var f = new Csv().Export(data);
-                response.OutputStream.Write(f, 0, f.Length);
+                byte[] bytes = new Csv().Export(_table.Data);
+                response.OutputStream.Write(bytes, 0, bytes.Length);
             }
             else
             {

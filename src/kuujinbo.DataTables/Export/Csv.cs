@@ -15,15 +15,10 @@ namespace kuujinbo.DataTables.Export
         public const string DOUBLE_QUOTE_ESCAPE = @"""""";
         public const string DOUBLE_QUOTE = @"""";
         // ---------------------------------------------------------------------------
-        // make sure individual fields are properly quoted:
-        // http://www.rfc-editor.org/rfc/rfc4180.txt
-        public string GetCSV(string s)
+        // quote per spec: http://www.rfc-editor.org/rfc/rfc4180.txt
+        public string GetField(string s)
         {
-            var hasLineBreak = s.Contains("\r\n");
-            var hasDoubleQuote = s.Contains(DOUBLE_QUOTE);
-            var hasComma = s.Contains(",");
-
-            return hasLineBreak || hasDoubleQuote || hasComma
+            return s.Contains(DOUBLE_QUOTE) || s.Contains(",") || s.Contains("\r\n")
                 ? string.Format("\"{0}\"", s.Replace(@"""", DOUBLE_QUOTE_ESCAPE))
                 : s;
         }
@@ -47,7 +42,12 @@ namespace kuujinbo.DataTables.Export
 
                         WriteList(list);
                     }
-                    else { throw new Exception("unsupported parameter"); }
+                    else 
+                    { 
+                        throw new ArgumentException(
+                            "Unsupported parameter; only `DataTable` or `List<List<object>>` are accepted."
+                        ); 
+                    }
                 }
                 return stream.ToArray();
             }
@@ -78,7 +78,7 @@ namespace kuujinbo.DataTables.Export
                 if (i > 0) _writer.Write(",");
 
                 var val = row[i] != null ? row[i].ToString() : string.Empty;
-                _writer.Write(GetCSV(val));
+                _writer.Write(GetField(val));
             }
             _writer.WriteLine();
         }
