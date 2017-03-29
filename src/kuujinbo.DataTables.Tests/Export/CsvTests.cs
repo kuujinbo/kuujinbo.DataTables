@@ -50,7 +50,7 @@ namespace kuujinbo.DataTables.Tests.Export
         [Fact]
         public void GetCSV_NoDoubleQuotes_IsNoOp()
         {
-            var text = "text without double quotes";
+            var text = "text without double quotes.";
 
             var result = _csv.GetCSV(text);
 
@@ -58,9 +58,9 @@ namespace kuujinbo.DataTables.Tests.Export
         }
 
         [Fact]
-        public void GetCSV_DoubleQuotes_EscapesQuotes()
+        public void GetCSV_WithDoubleQuotes_AddsDoubleQuotes()
         {
-            var text = "text with \"double quotes\"";
+            var text = "text with \"double quotes\".";
 
             var result = _csv.GetCSV(text);
 
