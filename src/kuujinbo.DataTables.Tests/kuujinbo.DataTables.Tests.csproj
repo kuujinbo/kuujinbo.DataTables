@@ -113,6 +113,9 @@
     <Compile Include="TableHtmlWriterTests.cs" />
     <Compile Include="TableSettingsTests.cs" />
     <Compile Include="TableTests.cs" />
+    <Compile Include="Utils\DateFormatValidatorTests.cs" />
+    <Compile Include="Utils\EnumUtilsTests.cs" />
+    <Compile Include="Utils\RegexUtilsTests.cs" />
     <Compile Include="ViewAllPathTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,10 +19,13 @@ namespace kuujinbo.DataTables.Export
         // http://www.rfc-editor.org/rfc/rfc4180.txt
         public string GetCSV(string s)
         {
-            return DOUBLE_QUOTE
-              + s.Replace(@"""", DOUBLE_QUOTE_ESCAPE)
-              + DOUBLE_QUOTE
-              ;
+            var hasLineBreak = s.Contains("\r\n");
+            var hasDoubleQuote = s.Contains(DOUBLE_QUOTE);
+            var hasComma = s.Contains(",");
+
+            return hasLineBreak || hasDoubleQuote || hasComma
+                ? string.Format("\"{0}\"", s.Replace(@"""", DOUBLE_QUOTE_ESCAPE))
+                : s;
         }
 
         public byte[] Export(object data)
