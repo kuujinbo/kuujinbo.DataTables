@@ -13,7 +13,8 @@
   {
     "Id": 25,
     "Name": "Ramos, Angelica",
-    "Position": "Chief Executive Officer (CEO)",
+    // verify CSV export newline
+    "Position": "Chief Executive Officer\r\n (CEO)",
     "Office": "London",
     "Extension": 5797,
     "StartDate": null,

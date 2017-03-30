@@ -16,7 +16,6 @@ namespace kuujinbo.DataTables
     {
         public static readonly string CSV_CONTENT_TYPE = "text/csv";
         public static readonly string JSON_CONTENT_TYPE = "application/json";
-        public static readonly string FILENAME = string.Format("{0:yyyyMMdd-HHmm}.csv", DateTime.Now);
 
         private ITable _table;
         public DataTableResult(ITable table)
@@ -35,9 +34,12 @@ namespace kuujinbo.DataTables
                 response.ContentType = CSV_CONTENT_TYPE;
                 response.AddHeader(
                     "Content-Disposition",
-                    string.Format("attachment; filename={0}", FILENAME)
+                    string.Format(
+                        "attachment; filename={0}", 
+                        string.Format("{0:yyyyMMdd-HHmm}.csv", DateTime.Now)
+                    )
                 );
-
+                // TODO: handle bool && enum
                 byte[] bytes = new Csv().Export(_table.Data);
                 response.OutputStream.Write(bytes, 0, bytes.Length);
             }

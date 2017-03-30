@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace kuujinbo.DataTables.Export
 {
@@ -18,8 +17,11 @@ namespace kuujinbo.DataTables.Export
         // quote per spec: http://www.rfc-editor.org/rfc/rfc4180.txt
         public string GetField(string s)
         {
-            return s.Contains(DOUBLE_QUOTE) || s.Contains(",") || s.Contains("\r\n")
-                ? string.Format("\"{0}\"", s.Replace(@"""", DOUBLE_QUOTE_ESCAPE))
+            return s.Contains(DOUBLE_QUOTE)
+                || s.Contains(",") 
+                // lowest common denominator; windows newline \r\n
+                || s.Contains("\n")
+                ? string.Format("\"{0}\"", s.Replace(DOUBLE_QUOTE, DOUBLE_QUOTE_ESCAPE))
                 : s;
         }
 
