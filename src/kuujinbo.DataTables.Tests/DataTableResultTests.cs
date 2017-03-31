@@ -13,11 +13,11 @@ namespace kuujinbo.DataTables.Tests
         }
     }
 
-    public class JqueryDataTablesResultTests
+    public class DataTableResultTests
     {
         private FakeController _fakeController;
 
-        public JqueryDataTablesResultTests()
+        public DataTableResultTests()
         {
             _fakeController = new FakeController();
         }

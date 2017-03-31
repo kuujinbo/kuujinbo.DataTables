@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using kuujinbo.DataTables.Export;
 using Xunit;
 using Xunit.Abstractions;
@@ -62,7 +64,7 @@ namespace kuujinbo.DataTables.Tests.Export
         }
 
         [Fact]
-        public void GetField_WithDoubleQuotes_InsertsDoubleQuotes()
+        public void GetField_DoubleQuotes_InsertsDoubleQuotes()
         {
             var text = "text with \"double quotes\".";
 
@@ -75,7 +77,7 @@ namespace kuujinbo.DataTables.Tests.Export
         }
 
         [Fact]
-        public void GetField_WithComma_InsertsDoubleQuotes()
+        public void GetField_Comma_InsertsDoubleQuotes()
         {
             var text = "text with comma,";
 
@@ -85,7 +87,7 @@ namespace kuujinbo.DataTables.Tests.Export
         }
 
         [Fact]
-        public void GetField_WithNewLine_InsertsDoubleQuotes()
+        public void GetField_NewLine_InsertsDoubleQuotes()
         {
             var text = @"text with
                         newline";
@@ -96,6 +98,61 @@ namespace kuujinbo.DataTables.Tests.Export
             Assert.Equal(string.Format("\"{0}\"", text), result);
         }
 
+        [Fact]
+        public void Export_NullParameter_Throws()
+        {
+            var exception = Assert.Throws<ArgumentException>(
+                 () => _csv.Export(null)
+             );
+        }
+
+        [Fact]
+        public void Export_BadParameter_Throws()
+        {
+            var exception = Assert.Throws<ArgumentException>(
+                 () => _csv.Export("string")
+             );
+        }
+
+        [Fact]
+        public void Export_DataTable_ReturnsByteArray()
+        {
+            var dt = new DataTable();
+            var headers = new string[] { "Header 1", "Header 2" };
+            dt.Columns.Add(new DataColumn(headers[0], typeof(int)));
+            dt.Columns.Add(new DataColumn(headers[1], typeof(float)));
+            var data = new object[] { 0, 0.0004f };
+            var dr = dt.NewRow();
+            dr.ItemArray = data;
+            dt.Rows.Add(dr);
+
+            var result = _csv.Export(dt);
+            var stringExpected = string.Format(
+                "{0}{1}{2}{1}",
+                string.Join(",", headers),
+                Environment.NewLine, 
+                string.Join(",", data)
+            );
+
+            Assert.NotNull(result);
+            Assert.True(result is byte[]);
+            Assert.Equal(stringExpected, Encoding.UTF8.GetString(result));
+        }
+
+        [Fact]
+        public void Export_ListOfList_ReturnsByteArray()
+        {
+            var list = new List<List<object>>() { new List<object>() { 1, null, "1" } };
+
+            var result = _csv.Export(list);
+
+            Assert.NotNull(result);
+            Assert.True(result is byte[]);
+            Assert.Equal(
+                string.Join(",", list[0].ToArray()) + Environment.NewLine, 
+                Encoding.UTF8.GetString(result)
+            );
+        }
         #endregion
     }
 }

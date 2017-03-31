@@ -103,7 +103,7 @@
     <Compile Include="ActionButtonTests.cs" />
     <Compile Include="DataTableModelBinderTests.cs" />
     <Compile Include="Export\CsvTests.cs" />
-    <Compile Include="JqueryDataTablesResultTests.cs" />
+    <Compile Include="DataTableResultTests.cs" />
     <Compile Include="Json\JsonNetResultTests.cs" />
     <Compile Include="Json\JsonNetSerializerTests.cs" />
     <Compile Include="Json\WriteBoolConverterTests.cs" />
