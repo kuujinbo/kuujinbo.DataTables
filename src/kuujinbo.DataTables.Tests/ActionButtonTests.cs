@@ -47,7 +47,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetHtml_WhenModal_ReturnsButtonHtml()
+        public void GetHtml_Modal_ReturnsButtonHtml()
         {
             var actionButton = new ActionButton("url", "text")
             {

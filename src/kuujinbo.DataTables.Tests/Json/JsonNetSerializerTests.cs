@@ -18,7 +18,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void Get_WithNullObject_ThrowsArgumentNullException()
+        public void Get_NullObject_ThrowsArgumentNullException()
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => _jsonNetSerializer.Get(null)

@@ -158,7 +158,7 @@ namespace kuujinbo.DataTables.Tests
 
         #region tests
         [Fact]
-        public void ShowCheckboxColumn_WithoutActionButtons_ReturnsFalse()
+        public void ShowCheckboxColumn_NoActionButtons_ReturnsFalse()
         {
             var table = new Table()
             {
@@ -173,7 +173,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ShowCheckboxColumn_WithActionButtons_ReturnsTrue()
+        public void ShowCheckboxColumn_ActionButtons_ReturnsTrue()
         {
             var table = new Table();
 

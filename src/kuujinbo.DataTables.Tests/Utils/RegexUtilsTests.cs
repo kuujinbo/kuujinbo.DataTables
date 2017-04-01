@@ -6,7 +6,7 @@ namespace kuujinbo.DataTables.Tests.Utils
     public class RegexUtilsTests
     {
         [Fact]
-        public void PascalCaseSplit_MatchingString_InsertsSpaces()
+        public void PascalCaseSplit_Matches_InsertsSpaces()
         {
             Assert.Equal<string>(
                 "Hello World World",
@@ -15,7 +15,7 @@ namespace kuujinbo.DataTables.Tests.Utils
         }
 
         [Fact]
-        public void PascalCaseSplit_MatchingString_IsNoOp()
+        public void PascalCaseSplit_NoMatch_IsNoOp()
         {
             string expected = "TH T7 T^ jk $# 08 j$0";
 

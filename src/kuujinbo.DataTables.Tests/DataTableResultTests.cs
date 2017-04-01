@@ -23,7 +23,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ExecuteResult_WithNullObjectData_ThrowsArgumentNullException()
+        public void ExecuteResult_NullObjectData_ThrowsArgumentNullException()
         {
             _fakeController.SetFakeControllerContext();
 
@@ -35,7 +35,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ExecuteResult_WithNullContext_ThrowsArgumentNullException()
+        public void ExecuteResult_NullContext_ThrowsArgumentNullException()
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => _fakeController
@@ -47,7 +47,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ExecuteResult_WhenSaveAsFalse_ReturnsCorrectTypeAndHeaders()
+        public void ExecuteResult_SaveAsFalse_ReturnsCorrectTypeAndHeaders()
         {
             _fakeController.SetFakeControllerContext();
 
@@ -61,7 +61,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ExecuteResult_WhenSaveAsTrue_ReturnsCorrectTypeAndHeaders()
+        public void ExecuteResult_SaveAsTrue_ReturnsCorrectTypeAndHeaders()
         {
             _fakeController.SetFakeControllerContext();
 

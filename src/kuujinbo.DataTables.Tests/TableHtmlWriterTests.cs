@@ -23,7 +23,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ActionButtonsHtml_WithoutActionButton_WritesEmptyString()
+        public void ActionButtonsHtml_NoActionButton_WritesEmptyString()
         {
             var table = new Table();
 
@@ -34,7 +34,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void ActionButtonsHtml_WithActionButton_WritesHtml()
+        public void ActionButtonsHtml_ActionButton_WritesHtml()
         {
             var table = new Table()
             {
@@ -58,7 +58,7 @@ namespace kuujinbo.DataTables.Tests
          * ===================================================================
          */
         [Fact]
-        public void GetGetTableHtml_WithNullColumns_ThrowsArgumentNullException()
+        public void GetGetTableHtml_NullColumns_ThrowsArgumentNullException()
         {
             var table = new Table();
             var exception = Assert.Throws<ArgumentNullException>(
@@ -69,7 +69,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WithEmptyColumns_ThrowsArgumentNullException()
+        public void GetGetTableHtml_EmptyColumns_ThrowsArgumentNullException()
         {
             var table = new Table() { Columns = new List<Column>() };
             var exception = Assert.Throws<ArgumentNullException>(
@@ -80,7 +80,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WhenIsSearchableFalse_AddsEmptyDataSetAttribute()
+        public void GetGetTableHtml_IsSearchableFalse_AddsEmptyDataSetAttribute()
         {
             var columns = new List<Column>() { new Column() };
             var table = new Table() { Columns = columns };
@@ -97,7 +97,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WhenIsSearchableTrue_AddsDataSetAttributeValue()
+        public void GetGetTableHtml_IsSearchableTrue_AddsDataSetAttributeValue()
         {
             var columns = new List<Column>() { new Column() { IsSearchable = true } };
             var table = new Table() { Columns = columns };
@@ -114,7 +114,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WithColumnDisplayWidth_AddsInlineStyleToThead()
+        public void GetGetTableHtml_ColumnDisplayWidth_AddsInlineStyleToThead()
         {
             var columns = new List<Column>()
             { 
@@ -141,7 +141,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WithABoolPropertyType_AddsSelectFilterToTfoot()
+        public void GetGetTableHtml_BoolPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>() { new Column() { Type = typeof(bool) } };
             var table = new Table() { Columns = columns };
@@ -173,7 +173,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WithNullableBoolPropertyType_AddsSelectFilterToTfoot()
+        public void GetGetTableHtml_NullableBoolPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>()
             { 
@@ -209,7 +209,7 @@ namespace kuujinbo.DataTables.Tests
 
         public enum TestEnum { OneTwo, ThreeFour }
         [Fact]
-        public void GetGetTableHtml_WithEnumPropertyType_AddsSelectFilterToTfoot()
+        public void GetGetTableHtml_EnumPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>()
             { 
@@ -249,7 +249,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_WithAnyOtherPropertyType_AddsTextInputFiltersToTfoot()
+        public void GetGetTableHtml_AnyOtherPropertyType_AddsTextInputFiltersToTfoot()
         {
             var columns = new List<Column>() { new Column() };
             var table = new Table() { Columns = columns };
@@ -293,7 +293,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetJavaScriptConfig_WhenDataUrlIsNull_ThrowsArgumentNullException()
+        public void GetJavaScriptConfig_DataUrlIsNull_ThrowsArgumentNullException()
         {
             var table = new Table();
             var exception = Assert.Throws<ArgumentNullException>(
@@ -304,7 +304,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetJavaScriptConfig_WhenDataUrlIsEmpty_ThrowsArgumentNullException()
+        public void GetJavaScriptConfig_DataUrlIsEmpty_ThrowsArgumentNullException()
         {
             var table = new Table() { DataUrl = string.Empty };
 
@@ -316,7 +316,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetJavaScriptConfig_WhenDataUrlNotWhiteSpaceAndOtherPropertiesNotSet_ReturnsJson()
+        public void GetJavaScriptConfig_DataUrlNotWhiteSpaceAndOtherPropertiesNotSet_ReturnsJson()
         {
             var table = new Table() { DataUrl = "/" };
 
@@ -332,7 +332,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetJavaScriptConfig_WhenOtherSimplePropertiesSet_ReturnsJson()
+        public void GetJavaScriptConfig_OtherSimplePropertiesSet_ReturnsJson()
         {
             var table = new Table()
             {
@@ -352,7 +352,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetJavaScriptConfig_WhenSaveAsTrue_AddsColumnNames()
+        public void GetJavaScriptConfig_SaveAsTrue_AddsColumnNames()
         {
             var table = new Table()
             {
@@ -373,7 +373,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetScriptElements_WhenScriptPathsNull_ReturnsStringEmpty()
+        public void GetScriptElements_ScriptPathsNull_ReturnsStringEmpty()
         {
             var table = new Table();
 
@@ -381,7 +381,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetScriptElements_WhenScriptPathsEmptyReturnsStringEmpty()
+        public void GetScriptElements_ScriptPathsEmptyReturnsStringEmpty()
         {
             var table = new Table() { ScriptPaths = new string[] { } };
 
@@ -389,7 +389,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetScriptElements_WhenScriptPathsNotEmptyReturnsScriptTags()
+        public void GetScriptElements_ScriptPathsNotEmptyReturnsScriptTags()
         {
             var scripts = new string[] { "0.js", "1.js", "2.js", "3.js", "4.js" };
             var table = new Table() { ScriptPaths = scripts };

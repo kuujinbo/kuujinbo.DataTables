@@ -119,7 +119,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void BindModel_WithExpectedFormValues_MapsFormCollectionToModel()
+        public void BindModel_ExpectedFormValues_MapsFormCollectionToModel()
         {
             FakeHttpPost();
 
@@ -160,7 +160,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void BindModel_WithEmptyColumnNames_MapsFormCollectionToModel()
+        public void BindModel_EmptyColumnNames_MapsFormCollectionToModel()
         {
             FakeHttpPost();
             // initial HTTP request does **NOT** include column names

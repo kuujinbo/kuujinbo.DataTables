@@ -7,19 +7,19 @@ namespace kuujinbo.DataTables.Tests
     public class ViewAllPathTests
     {
         [Fact]
-        public void All_WithNullUri_ReturnsFalse()
+        public void All_NullUri_ReturnsFalse()
         {
             Assert.False(ViewAllPath.All(null));
         }
 
         [Fact]
-        public void All_WithOutViewAllSegmentInUri_ReturnsTrue()
+        public void All_NoViewAllSegmentInUri_ReturnsTrue()
         {
             Assert.False(ViewAllPath.All(new Uri("http://test.test")));
         }
 
         [Fact]
-        public void All_WithViewAllSegmentInUri_ReturnsTrue()
+        public void All_ViewAllSegmentInUri_ReturnsTrue()
         {
             var uri = new Uri(new Uri("http://test.test"), ViewAllPath.SEGMENT);
             Assert.True(ViewAllPath.All(uri));
@@ -37,7 +37,7 @@ namespace kuujinbo.DataTables.Tests
 
 
         [Fact]
-        public void MakeUrl_WithTrailingSlashAndNoControllerName_ReturnsBasePathPlusSegment()
+        public void MakeUrl_TrailingSlashAndNoControllerName_ReturnsBasePathPlusSegment()
         {
             var appPath = "/";
             var mock = new Moq.Mock<HttpRequestBase>();
@@ -50,7 +50,7 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void MakeUrl_WithoutTrailingSlashAndWithControllerName_ReturnsBasePathControllerNameSegment()
+        public void MakeUrl_NoTrailingSlashAndControllerName_ReturnsBasePathControllerNameSegment()
         {
             var appPath = "/virtualDirectory";
             var mock = new Moq.Mock<HttpRequestBase>();

@@ -37,7 +37,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void ExecuteResult_WithNullObjectData_ThrowsArgumentNullException()
+        public void ExecuteResult_NullObjectData_ThrowsArgumentNullException()
         {
             _fakeController.SetFakeControllerContext();
 
@@ -50,7 +50,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void ExecuteResult_WithNullContext_ThrowsArgumentNullException()
+        public void ExecuteResult_NullContext_ThrowsArgumentNullException()
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => _fakeController
@@ -62,7 +62,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void ExecuteResult_WithData_ReturnsCorrectTypeAndHeaders()
+        public void ExecuteResult_Data_ReturnsCorrectTypeAndHeaders()
         {
             _fakeController.SetFakeControllerContext();
 
@@ -74,7 +74,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void ExecuteResult_WithData_WritesJsonString()
+        public void ExecuteResult_Data_WritesJsonString()
         {
             var json = string.Empty;
             var fakeContext = new Mock<HttpContextBase>();
@@ -101,7 +101,7 @@ namespace kuujinbo.DataTables.Tests.Json
         }
 
         [Fact]
-        public void ExecuteResult_WithDataAndDateFormat_WritesJsonString()
+        public void ExecuteResult_DataAndDateFormat_WritesJsonString()
         {
             var json = string.Empty;
             var date = DateTime.Today;

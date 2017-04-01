@@ -5,7 +5,7 @@ namespace kuujinbo.DataTables.Tests
     public class TableSettingsTests
     {
         [Fact]
-        public void StaticConstructor_WithoutAppSettings_SetsDefaultConfigValues()
+        public void StaticConstructor_NoAppSettings_SetsDefaultConfigValues()
         {
             var settings = TableSettings.Settings;
 
