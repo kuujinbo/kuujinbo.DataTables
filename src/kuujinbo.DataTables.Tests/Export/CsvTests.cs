@@ -135,7 +135,7 @@ namespace kuujinbo.DataTables.Tests.Export
             );
 
             Assert.NotNull(result);
-            Assert.True(result is byte[]);
+            Assert.IsType<byte[]>(result);
             Assert.Equal(stringExpected, Encoding.UTF8.GetString(result));
         }
 
@@ -147,7 +147,7 @@ namespace kuujinbo.DataTables.Tests.Export
             var result = _csv.Export(list);
 
             Assert.NotNull(result);
-            Assert.True(result is byte[]);
+            Assert.IsType<byte[]>(result);
             Assert.Equal(
                 string.Join(",", list[0].ToArray()) + Environment.NewLine, 
                 Encoding.UTF8.GetString(result)

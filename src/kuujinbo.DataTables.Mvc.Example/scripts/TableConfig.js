@@ -428,7 +428,7 @@ TableConfig.prototype = {
     },
     // flag value picker selected items
     getPickerSelectedSelector: function() {
-        return 'div.' + this.getSelectedSelector();;
+        return 'div.' + this.getSelectedSelector();
     },
     // store widget id => multiple widgets in DOM
     getValuePickerIdName: function() { return '_valuePickerIdName_'; },
