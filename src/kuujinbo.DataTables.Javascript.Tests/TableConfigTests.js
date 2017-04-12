@@ -1013,7 +1013,7 @@ describe('configTable', function () {
             expect(configTable.enterSearchInput.calls.count()).toEqual(2);
         });
 
-        it('should call resetValuePicker when the value picker button is clicked', function () {
+        it('should call the value picker button click hander', function () {
             for (var i = 0; i < vp1ChildDivs.length; ++i) {
                 vp1ChildDivs[i].dispatchEvent(new Event('click'));
             }
@@ -1026,7 +1026,20 @@ describe('configTable', function () {
             expect(valuePickers[0].style.display).toEqual('none');
         });
 
-
+        it('should call the click handler for each value picker item', function () {
+            console.log(vp1ChildDivs.length + vp2ChildDivs.length);
+            for (var i = 0; i < vp1ChildDivs.length; ++i) {
+                vp1ChildDivs[i].dispatchEvent(new Event('click', { bubbles: true }));
+                // event handler set on parent element node       ^^^^^^^^^^^^^^^^
+                // OR
+                // valuePickers[0].dispatchEvent(new Event('click'));
+            }
+            for (var i = 0; i < vp2ChildDivs.length; ++i) {
+                vp2ChildDivs[i].dispatchEvent(new Event('click', { bubbles: true }));
+            }
+            expect(configTable.togglePickerItem.calls.count())
+                .toEqual(col1.length + col2.length);
+        });
 
 
     });
