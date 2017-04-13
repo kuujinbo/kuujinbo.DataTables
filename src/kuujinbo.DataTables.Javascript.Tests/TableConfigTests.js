@@ -158,7 +158,6 @@ describe('configTable', function () {
         });
     });
 
-    // jasmine-jquery
     describe('clearSearchFilters', function () {
         it('should clear all filter values', function () {
             setFixtures(
@@ -187,7 +186,6 @@ describe('configTable', function () {
         });
     });
 
-    // jasmine-jquery
     describe('getXsrfToken', function () {
         it('should return null when hidden field not in DOM', function () {
             expect(configTable.getXsrfToken()).toBeNull()
@@ -205,7 +203,6 @@ describe('configTable', function () {
         });
     });
 
-    // jasmine-jquery
     describe('search', function () {
         beforeEach(function () {
             spyOn(configTable, 'setSearchColumn');
