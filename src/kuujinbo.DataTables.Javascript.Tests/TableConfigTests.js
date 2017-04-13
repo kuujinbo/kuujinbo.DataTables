@@ -938,10 +938,13 @@ describe('configTable', function () {
     describe('value picker', function () {
         var col1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         var col2 = ['zero', 'one', 'two', 'three', 'four'];
-        var selectedClass = 'dataTableSelected';
-        var table = '', valuePickers = '', vp1ChildDivs = '', vp2ChildDivs = '';
+        var pickerCount = col1.length + col2.length
+        var selectedClass = '', table = null,
+            valuePickers = null, valuePickerCount = 0
+            ,vp1ChildDivs = '', vp2ChildDivs = '';
 
         beforeEach(function () {
+            selectedClass = configTable.getSelectedSelector();
             setFixtures(
                 "<table id='jquery-data-table'><tfoot></tr>"
                 + "<th rowspan='1' colspan='1'></th>"
@@ -954,7 +957,8 @@ describe('configTable', function () {
 
             spyOn(configTable, 'enterSearchInput');
             spyOn(configTable, 'resetValuePicker');
-            spyOn(configTable, 'togglePickerItem');
+            spyOn(configTable, 'togglePickerItem').and.callThrough();
+            spyOn(configTable, 'getSelectedSelector').and.returnValue(selectedClass);
 
             configTable.addValuePicker(1, col1);
             configTable.addValuePicker(2, col2);
@@ -962,6 +966,7 @@ describe('configTable', function () {
 
             table = document.querySelector(configTable.getTableId());
             valuePickers = table.querySelectorAll('div.valuePicker');
+            valuePickerCount = valuePickers.length;
             vp1ChildDivs = valuePickers[0].querySelectorAll('div.pickerItem');
             vp2ChildDivs = valuePickers[1].querySelectorAll('div.pickerItem');
         });
@@ -979,68 +984,98 @@ describe('configTable', function () {
 
         it('should have overflowY style when value pickers child items count is more than 10', function () {
             configTable.addValuePicker(4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-            valuePickers = table.querySelectorAll('div.valuePicker');
+
+            // querySelectorAll() => non-live NodeList of element objects, so re-query
+            var localValuePickers = table.querySelectorAll('div.valuePicker');
+
+            expect(localValuePickers.length).toEqual(3);
 
             // gt 10
-            expect(valuePickers[0].children[0].style.overflowY).toEqual('auto');
+            expect(localValuePickers[0].children[0].style.overflowY).toEqual('auto');
             // lt 10
-            expect(valuePickers[1].children[0].style.overflowY).toEqual('');
+            expect(localValuePickers[1].children[0].style.overflowY).toEqual('');
             // eq 10
-            expect(valuePickers[2].children[0].style.overflowY).toEqual('');
+            expect(localValuePickers[2].children[0].style.overflowY).toEqual('');
         });
 
         it('should create the value pickers child divs', function () {
-            expect(vp1ChildDivs.length).toEqual(col1.length);
-            expect(vp2ChildDivs.length).toEqual(col2.length);
+            var columns = [col1.length, col2.length];
+
+            for (var i = 0; i < valuePickerCount; ++i) {
+                expect(valuePickers[i].querySelectorAll('div.pickerItem').length)
+                    .toEqual(columns[i]);
+            }
         });
 
-        it('should create the value pickers child input button', function () {
-            var vp1ChildButton = valuePickers[0].querySelectorAll('input[type=button]');
-            var vp2ChildButton = valuePickers[1].querySelectorAll('input[type=button]');
+        it('should create the value picker child input button', function () {
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var button = valuePickers[i].querySelectorAll('input[type=button]');
 
-            expect(vp1ChildButton.length).toEqual(1);
-            expect(vp1ChildButton[0].value).toEqual('Add / Clear');
-            expect(vp2ChildButton.length).toEqual(1);
-            expect(vp2ChildButton[0].value).toEqual('Add / Clear');
+                expect(button.length).toEqual(1);
+                expect(button[0].value).toEqual('Add / Clear');
+            }
         });
 
-        it('should call the focus handler for value picker', function () {
-            document.querySelector("th > input[data-column-number='1']")
-                .dispatchEvent(new Event('focus'));
-            document.querySelector("th > input[data-column-number='2']")
-                .dispatchEvent(new Event('focus'));
+        it('should call the focus handler when entering the search fields', function () {
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var selector = "th > input[data-column-number='" + (i + 1) + "']";
+                document.querySelector(selector).dispatchEvent(new Event('focus'));
+            }
 
             expect(configTable.enterSearchInput.calls.count()).toEqual(2);
         });
 
-        it('should call the value picker button click hander', function () {
-            for (var i = 0; i < vp1ChildDivs.length; ++i) {
-                vp1ChildDivs[i].dispatchEvent(new Event('click'));
+        // TODO: add expect() for input text fields
+        it('should call the value picker button click handlers', function () {
+            for (var i = 0; i < valuePickerCount; ++i) {
+                valuePickers[i].querySelector('input[type=button]')
+                    .dispatchEvent(new Event('click'));
+                // select picker items => fill input text field
+                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < elementList.length; ++j) {
+                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
+                    // event handler set on parent element node       ^^^^^^^^^^^^^^^^
+                }
             }
-            console.log(valuePickers[0].innerHTML);
-            valuePickers[0].querySelector('input[type=button]')
-                .dispatchEvent(new Event('click'));
-            console.log(valuePickers[0].innerHTML);
 
-            expect(configTable.resetValuePicker.calls.count()).toEqual(1);
+            expect(configTable.resetValuePicker.calls.count()).toEqual(valuePickers.length);
             expect(valuePickers[0].style.display).toEqual('none');
+            expect(valuePickers[1].style.display).toEqual('none');
         });
 
         it('should call the click handler for each value picker item', function () {
-            console.log(vp1ChildDivs.length + vp2ChildDivs.length);
-            for (var i = 0; i < vp1ChildDivs.length; ++i) {
-                vp1ChildDivs[i].dispatchEvent(new Event('click', { bubbles: true }));
-                // event handler set on parent element node       ^^^^^^^^^^^^^^^^
-                // OR
-                // valuePickers[0].dispatchEvent(new Event('click'));
+            // first click add 'select' class to each item
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < elementList.length; ++j) {
+                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
+                    // event handler set on parent element node       ^^^^^^^^^^^^^^^^
+                }
             }
-            for (var i = 0; i < vp2ChildDivs.length; ++i) {
-                vp2ChildDivs[i].dispatchEvent(new Event('click', { bubbles: true }));
+            expect(configTable.togglePickerItem.calls.count()).toEqual(pickerCount);
+            expect(configTable.getSelectedSelector.calls.count()).toEqual(pickerCount);
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < elementList.length; ++j) {
+                    expect(elementList[j].classList.contains(selectedClass)).toEqual(true);
+                }
             }
-            expect(configTable.togglePickerItem.calls.count())
-                .toEqual(col1.length + col2.length);
+
+            // second click **REMOVE** 'select' class from each item
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < elementList.length; ++j) {
+                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
+                }
+            }
+            expect(configTable.togglePickerItem.calls.count()).toEqual(pickerCount * 2);
+            expect(configTable.getSelectedSelector.calls.count()).toEqual(pickerCount * 2);
+            for (var i = 0; i < valuePickerCount; ++i) {
+                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < elementList.length; ++j) {
+                    expect(elementList[j].classList.contains(selectedClass)).toEqual(false);
+                }
+            }
         });
-
-
     });
 });
