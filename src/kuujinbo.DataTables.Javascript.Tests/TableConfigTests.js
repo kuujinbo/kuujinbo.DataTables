@@ -319,7 +319,7 @@ describe('configTable', function () {
         });
     });
 
-    // add / remove processing spinner (jasmine-jquery)
+    // add / remove processing spinner
     describe('showSpin', function () {
         var spinClasses;
         beforeEach(function () {
@@ -680,7 +680,6 @@ describe('configTable', function () {
     });
 
     // click 'datatable-check-all' checkbox - [un]check all checkboxes 
-    // (jasmine-jquery)
     describe('clickCheckAll', function () {
         var event, checked, unchecked, checkAllId;
         beforeEach(function () {
@@ -765,7 +764,6 @@ describe('configTable', function () {
         });
     });
 
-    // (jasmine-jquery)
     describe('clickTable link', function () {
         var event, config, recordId;
         beforeEach(function () {
@@ -862,7 +860,6 @@ describe('configTable', function () {
         });
     });
 
-    // (jasmine-jquery)
     describe('clickTable checkbox', function () {
         var event, selectedClass;
         beforeEach(function () {
@@ -940,8 +937,7 @@ describe('configTable', function () {
         var col2 = ['zero', 'one', 'two', 'three', 'four'];
         var pickerCount = col1.length + col2.length
         var selectedClass = '', table = null,
-            valuePickers = null, valuePickerCount = 0
-            ,vp1ChildDivs = '', vp2ChildDivs = '';
+            valuePickers = null, valuePickerCount = 0;
 
         beforeEach(function () {
             selectedClass = configTable.getSelectedSelector();
@@ -967,8 +963,6 @@ describe('configTable', function () {
             table = document.querySelector(configTable.getTableId());
             valuePickers = table.querySelectorAll('div.valuePicker');
             valuePickerCount = valuePickers.length;
-            vp1ChildDivs = valuePickers[0].querySelectorAll('div.pickerItem');
-            vp2ChildDivs = valuePickers[1].querySelectorAll('div.pickerItem');
         });
 
         it('should create the value pickers with correct ids', function () {
