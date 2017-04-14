@@ -5,24 +5,15 @@
 /// <reference path="./../../src/kuujinbo.DataTables.Mvc.Example/scripts/TableConfig.js" />
 'use strict';
 
-describe('configTable', function () {
+describe('configTable', function() {
     var configTable = null;
-
-    beforeEach(function () {
-        var configValues = {
-            dataUrl: '/',
-            infoRowUrl: '/info',
-            editRowUrl: '/edit',
-            deleteRowUrl: '/delete',
-            allowMultiColumnSorting: true
-        };
+    beforeEach(function() {
         configTable = new TableConfig();
         configTable.init();
-        configTable.setConfigValues(configValues);
     });
 
-    describe('selectors and DOM', function () {
-        it('should initialize the table objects', function () {
+    describe('selectors and DOM', function() {
+        it('initializes the table objects', function() {
             expect(configTable).toBeDefined();
             expect(configTable.getTableId()).toEqual('#jquery-data-table');
             expect(configTable.getCheckAllId()).toEqual('#datatable-check-all');
@@ -43,14 +34,14 @@ describe('configTable', function () {
             );
         });
 
-        it('should have the correct CSS selectors', function () {
+        it('creates CSS selectors', function() {
             expect(configTable.getActionButtonSelector()).toEqual('#data-table-actions button.btn');
             expect(configTable.getSearchFilterSelector()).toEqual('th input[type=text], th select');
             expect(configTable.getCheckedSelector()).toEqual('input[type="checkbox"]:checked');
             expect(configTable.getUncheckedSelector()).toEqual('input[type="checkbox"]:not(:checked)');
         });
 
-        it('should have the correct class names', function () {
+        it('creates class names', function() {
             expect(configTable.getSelectedRowClass()).toEqual('datatable-select-row');
 
             var spinClasses = configTable.getSpinClasses();
@@ -61,10 +52,10 @@ describe('configTable', function () {
         });
     });
 
-    describe('getInfoEditDelete', function () {
+    describe('getInfoEditDelete', function() {
         var infoEditDeleteId = 'infoEditDelete';
 
-        it('should not display links when all URLs are empty', function () {
+        it('does not display links when all URLs are empty', function() {
             configTable.setConfigValues({});
             setFixtures(
                 '<div id="' + infoEditDeleteId + '">'
@@ -77,7 +68,7 @@ describe('configTable', function () {
             expect(links.textContent).toEqual('');
         });
 
-        it('should display the info link when info URL is set', function () {
+        it('displays the info link when info URL is set', function() {
             configTable.setConfigValues({ infoRowUrl: '/info' });
             setFixtures(
                 '<div id="' + infoEditDeleteId + '">'
@@ -92,7 +83,7 @@ describe('configTable', function () {
             expect(links.children[0].dataset.action).toEqual('info');
         });
 
-        it('should display the edit link when info URL is set', function () {
+        it('displays the edit link when info URL is set', function() {
             configTable.setConfigValues({ editRowUrl: '/edit' });
             setFixtures(
                 '<div id="' + infoEditDeleteId + '">'
@@ -107,7 +98,7 @@ describe('configTable', function () {
             expect(links.children[0].dataset.action).toEqual('edit');
         });
 
-        it('should display the delete link when info URL is set', function () {
+        it('displays the delete link when info URL is set', function() {
             configTable.setConfigValues({ deleteRowUrl: '/edit' });
             setFixtures(
                 '<div id="' + infoEditDeleteId + '">'
@@ -122,7 +113,14 @@ describe('configTable', function () {
             expect(links.children[0].dataset.action).toEqual('delete');
         });
 
-        it('should display all links when the URLs are set', function () {
+        it('displays all links when all URLs are set', function() {
+            var configValues = {
+                dataUrl: '/',
+                infoRowUrl: '/info',
+                editRowUrl: '/edit',
+                deleteRowUrl: '/delete'
+            };
+            configTable.setConfigValues(configValues);
             setFixtures(
                 '<div id="' + infoEditDeleteId + '">'
                 + configTable.getInfoEditDelete()
@@ -143,8 +141,8 @@ describe('configTable', function () {
         });
     });
 
-    describe('clearCheckAll', function () {
-        it('should uncheck checkAll', function () {
+    describe('clearCheckAll', function() {
+        it('unchecks all checkboxes', function() {
             var template = document.createElement('div');
             template.innerHTML = '<input id="'
                 + configTable.getCheckAllId()
@@ -158,8 +156,8 @@ describe('configTable', function () {
         });
     });
 
-    describe('clearSearchFilters', function () {
-        it('should clear all filter values', function () {
+    describe('clearSearchFilters', function() {
+        it('clears all filter values', function() {
             setFixtures(
                 '<tfoot><tr>'
                 + "<th><input type='text' value='00' /></th>"
@@ -186,12 +184,12 @@ describe('configTable', function () {
         });
     });
 
-    describe('getXsrfToken', function () {
-        it('should return null when hidden field not in DOM', function () {
+    describe('getXsrfToken', function() {
+        it('returns null when the hidden field is not in the DOM', function() {
             expect(configTable.getXsrfToken()).toBeNull()
         });
 
-        it('should return token when hidden field in DOM', function () {
+        it('returns the XSRF token when the hidden field is in DOM', function() {
             setFixtures(
                 "<input name='__RequestVerificationToken' type='hidden' value='XXX' />"
             );
@@ -203,13 +201,13 @@ describe('configTable', function () {
         });
     });
 
-    describe('search', function () {
-        beforeEach(function () {
+    describe('search', function() {
+        beforeEach(function() {
             spyOn(configTable, 'setSearchColumn');
             spyOn(configTable, 'drawAndGoToPage1');
         });
 
-        it('should not search when textboxes are empty or whitespace', function () {
+        it('does not execute search when textboxes are empty or whitespace', function() {
             setFixtures(
                 '<th>'
                 + "<input type='text' placeholder='Search' data-column-number='1' />"
@@ -227,7 +225,7 @@ describe('configTable', function () {
             expect(resultTextboxes[1].value).toEqual('');
         });
 
-        it('should search when any textbox is not empty or whitespace', function () {
+        it('executes search when any textbox is not empty or whitespace', function() {
             spyOn(configTable, 'clearCheckAll');
             setFixtures(
                 '<th>'
@@ -251,7 +249,7 @@ describe('configTable', function () {
             expect(resultTextboxes[3].value).toEqual('04');
         });
 
-        it('should not search when the default select option is selected', function () {
+        it('does not execute search when the default select option is selected', function () {
             setFixtures(
                 '<th>'
                 + "<select name='select'>"
@@ -269,7 +267,7 @@ describe('configTable', function () {
             expect(result.length).toEqual(1);
         });
 
-        it('should search when any selected select is not empty or whitespace', function () {
+        it('executes search when any selected select is not empty or whitespace', function() {
             spyOn(configTable, 'clearCheckAll');
             setFixtures(
                 "<th><select name='select'>"
@@ -298,15 +296,15 @@ describe('configTable', function () {
         });
     });
 
-    describe('saveAs', function () {
-        beforeEach(function () {
+    describe('saveAs', function() {
+        beforeEach(function() {
             spyOn(configTable, 'getAjaxParams').and.returnValue({ saveAs: true });
             spyOn(configTable, 'getXsrfToken');
             spyOn(configTable, 'getConfigValues').and.returnValue({ dataUrl: '/data' });
             spyOn($.fn, 'downloadFile');
         });
 
-        it('should download binary content', function () {
+        it('downloads binary content', function() {
             configTable.saveAs();
 
             expect(configTable.getAjaxParams.calls.count()).toEqual(1);
@@ -317,13 +315,13 @@ describe('configTable', function () {
     });
 
     // add / remove processing spinner
-    describe('showSpin', function () {
+    describe('showSpin', function() {
         var spinClasses;
-        beforeEach(function () {
+        beforeEach(function() {
             spinClasses = configTable.getSpinClasses();
         });
 
-        it('should add the expected spin classes', function () {
+        it('adds the spin classes', function() {
             setFixtures('<div><span></span></div>');
             var domContainer = document.querySelector('div');
 
@@ -336,7 +334,7 @@ describe('configTable', function () {
             }
         });
 
-        it('should remove the spin classes', function () {
+        it('removes the spin classes', function() {
             setFixtures(
                 '<div><span class="' + spinClasses.join(' ') + '"></span></div>'
             );
@@ -351,9 +349,9 @@ describe('configTable', function () {
         });
     });
 
-    describe('sendXhr', function () {
+    describe('sendXhr', function() {
         var deferred, element;
-        beforeEach(function () {
+        beforeEach(function() {
             deferred = new jQuery.Deferred();
             element = document.createElement('button');
             spyOn(jQuery, 'ajax').and.returnValue(deferred);
@@ -361,7 +359,7 @@ describe('configTable', function () {
             spyOn(configTable, 'getXsrfToken');
         });
 
-        it('should call jQuery.ajax()', function () {
+        it('calls jQuery.ajax()', function() {
             var expectedArgs = {
                 url: '/', headers: undefined, data: {}, type: 'POST'
             };
@@ -371,7 +369,7 @@ describe('configTable', function () {
             expect(jQuery.ajax).toHaveBeenCalledWith(expectedArgs);
         });
 
-        it('should call showSpin before sending the XHR', function () {
+        it('calls showSpin before sending XHR', function() {
             configTable.sendXhr(element, '/', {});
 
             // mock XHR has **NOT** returned
@@ -381,7 +379,7 @@ describe('configTable', function () {
             expect(configTable.getXsrfToken).toHaveBeenCalledTimes(1);
         });
 
-        it('should call jqModalError and showSpin when promise is rejected', function () {
+        it('calls jqModalError and showSpin when promise is rejected', function() {
             spyOn(configTable, 'jqModalError');
             var httpResponseMsg = 'HTTP response error';
             var jqXHR = { responseJSON: httpResponseMsg };
@@ -398,7 +396,7 @@ describe('configTable', function () {
             expect(configTable.showSpin).toHaveBeenCalledWith(element);
         });
 
-        it('should call jqModalError with default error message when promise is rejected and 500 error', function () {
+        it('calls jqModalError with default error message when promise is rejected and 500 error', function() {
             spyOn(configTable, 'jqModalError');
             var jqXHR = { status: 500 };
             configTable.sendXhr(element, '/', {});
@@ -410,7 +408,7 @@ describe('configTable', function () {
             expect(configTable.jqModalError).toHaveBeenCalledWith(configTable.getXhrErrorMessage());
         });
 
-        it('should call jqModalError with XMLHttpRequest.statusText when promise is rejected and not 500 error', function () {
+        it('calls jqModalError with XMLHttpRequest.statusText when promise is rejected and not 500 error', function() {
             spyOn(configTable, 'jqModalError');
             var statusText = 'a custom HTTP response message';
             var jqXHR = { status: 400, statusText: statusText };
@@ -423,7 +421,7 @@ describe('configTable', function () {
             expect(configTable.jqModalError).toHaveBeenCalledWith(statusText);
         });
 
-        it('should call jqModalOK, showSpin, and draw when promise is fulfilled for bulk action', function () {
+        it('calls jqModalOK, showSpin, and draw when promise is fulfilled for bulk action', function() {
             spyOn(configTable, 'jqModalOK');
             spyOn(configTable, 'draw');
             var httpResponseMsg = 'HTTP response success';
@@ -441,7 +439,7 @@ describe('configTable', function () {
             expect(configTable.showSpin).toHaveBeenCalledWith(element);
         });
 
-        it('should call jqPartialViewModalOK and showSpin when promise is fulfilled for partial view action', function () {
+        it('calls jqPartialViewModalOK and showSpin when promise is fulfilled for partial view action', function() {
             spyOn(configTable, 'jqPartialViewModalOK');
             var partialHtmlResponse = '<h1>Partial View</h1>';
             var buttonText = 'Submit';
@@ -462,9 +460,9 @@ describe('configTable', function () {
         });
     });
 
-    describe('init', function () {
+    describe('init', function() {
         var id = 'id';
-        it('should call the setup functions', function () {
+        it('calls the setup functions', function() {
             spyOn(configTable, 'getTableId').and.returnValue(id);
             spyOn(configTable, 'addListeners');
             configTable.init();
@@ -480,9 +478,9 @@ describe('configTable', function () {
        event listener functions themsleves are tested in isolation below
        ========================================================================
     */
-    describe('EventTarget registration', function () {
+    describe('EventTarget registration', function() {
         var tableId;
-        beforeEach(function () {
+        beforeEach(function() {
             tableId = configTable.getTableId();
             setFixtures(
             "<div id='data-table-actions'>"
@@ -522,7 +520,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should call the click handler for action buttons', function () {
+        it('calls the action button click handlers', function () {
             spyOn(configTable, 'clickActionButton');
 
             configTable.init();
@@ -539,7 +537,7 @@ describe('configTable', function () {
             expect(configTable.clickActionButton.calls.count()).toEqual(1);
         });
 
-        it('should call the click handler for checkAll checkbox', function () {
+        it('calls the checkAll checkbox click handler', function () {
             spyOn(configTable, 'clickCheckAll');
 
             configTable.init();
@@ -551,7 +549,7 @@ describe('configTable', function () {
             expect(configTable.clickCheckAll.calls.count()).toEqual(1);
         });
 
-        it('should call the handler for any click on the table', function () {
+        it('calls the table click handler', function () {
             spyOn(configTable, 'clickTable');
 
             configTable.init();
@@ -564,7 +562,7 @@ describe('configTable', function () {
             expect(configTable.clickTable.calls.count()).toEqual(1);
         });
 
-        it('should call the click handler for the search icons', function () {
+        it('calls the search icon click handlers', function () {
             spyOn(configTable, 'clickSearch');
 
             configTable.init();
@@ -576,7 +574,7 @@ describe('configTable', function () {
             expect(configTable.clickSearch.calls.count()).toEqual(2);
         });
 
-        it('should call the click handler for the saveAs icon', function () {
+        it('calls the saveAs icon click handler', function () {
             spyOn(configTable, 'clickSaveAs');
 
             configTable.init();
@@ -586,7 +584,7 @@ describe('configTable', function () {
             expect(configTable.clickSaveAs.calls.count()).toEqual(1);
         });
 
-        it('should call the keyup handler for the search input fields', function () {
+        it('calls the search input fieldse keyup handler', function() {
             spyOn(configTable, 'keyupSearch');
 
             configTable.init();
@@ -603,9 +601,9 @@ describe('configTable', function () {
        event listener functions - verify EventTarget and correct behavior
        ========================================================================
     */
-    describe('clickActionButton', function () {
+    describe('clickActionButton', function() {
         var template, event;
-        beforeEach(function () {
+        beforeEach(function() {
             template = document.createElement('div');
             event = {
                 preventDefault: jasmine.createSpy()
@@ -613,7 +611,7 @@ describe('configTable', function () {
             spyOn(configTable, 'sendXhr');
         });
 
-        it('should be an error when a button does not have a data URL', function () {
+        it('shows a modal error when a button does not have a data URL', function() {
             spyOn(configTable, 'getSelectedRowIds')
             spyOn(configTable, 'jqModalError');
             template.innerHTML = '<button class="btn btn-primary">Batch Update<span></span></button>';
@@ -630,7 +628,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should be an error when no rows are selected for a bulk action', function () {
+        it('shows a modal error when no rows are selected for a bulk action', function () {
             spyOn(configTable, 'getSelectedRowIds').and.returnValue([]);
             spyOn(configTable, 'jqModalError');
             template.innerHTML = '<button class="btn btn-primary" data-url="/action">Batch Update<span></span></button>';
@@ -645,7 +643,7 @@ describe('configTable', function () {
             expect(configTable.jqModalError.calls.mostRecent().args[0]).toMatch('<h2>No Records Selected</h2>');
         });
 
-        it('should send XHR when rows are selected for a bulk action', function () {
+        it('sends XHR when rows are selected for a bulk action', function() {
             spyOn(configTable, 'getSelectedRowIds').and.returnValue([1, 2]);
             template.innerHTML = '<button class="btn btn-primary" data-url="/action">Batch Update<span></span></button>';
             event.target = template.firstChild;
@@ -660,7 +658,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should send XHR GET with null data for a modal view action', function () {
+        it('sends XHR GET with null data for a modal view action', function() {
             template.innerHTML = "<button class='btn btn-primary' data-url='/action'"
                 + ' data-modal="">'
                 + '<span></span></button>';
@@ -677,9 +675,9 @@ describe('configTable', function () {
     });
 
     // click 'datatable-check-all' checkbox - [un]check all checkboxes 
-    describe('clickCheckAll', function () {
+    describe('clickCheckAll', function() {
         var event, checked, unchecked, checkAllId;
-        beforeEach(function () {
+        beforeEach(function() {
             event = {};
             checked = configTable.getCheckedSelector();
             unchecked = configTable.getUncheckedSelector();
@@ -693,7 +691,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should result in all checkboxes unchecked when clickAll is unchecked', function () {
+        it('unchecks all checkboxes when clickAll is unchecked', function() {
             event.target = document.querySelector(checkAllId);
 
             configTable.clickCheckAll(event);
@@ -705,7 +703,7 @@ describe('configTable', function () {
             }
         });
 
-        it('should result in all checkboxes checked when clickAll is checked', function () {
+        it('checks all checkboxes when clickAll is checked', function() {
             var checkAll = document.querySelector(checkAllId);
             checkAll.checked = true;
             event.target = checkAll;
@@ -720,14 +718,14 @@ describe('configTable', function () {
         });
     });
 
-    describe('clickSearch', function () {
+    describe('clickSearch', function() {
         var template, event;
-        beforeEach(function () {
+        beforeEach(function() {
             template = document.createElement('div');
             event = {};
         });
 
-        it('should not search a non macthing event target', function () {
+        it('does not execute search for a non matching event target', function() {
             spyOn(configTable, 'search');
             spyOn(configTable, 'clearSearchFilters');
             spyOn(configTable, 'reload');
@@ -740,7 +738,7 @@ describe('configTable', function () {
             expect(configTable.reload).not.toHaveBeenCalled();
         });
 
-        it('should search when icon is clicked', function () {
+        it('executes search when icon is clicked', function() {
             spyOn(configTable, 'search');
             template.innerHTML = "<span class='search-icons glyphicon glyphicon-search' title='Search'></span>";
             event.target = template.firstChild;
@@ -749,7 +747,7 @@ describe('configTable', function () {
             expect(configTable.search).toHaveBeenCalledTimes(1);
         });
 
-        it('should clear the search and reload data when icon is clicked', function () {
+        it('clears the search and reloads data when icon is clicked', function() {
             spyOn(configTable, 'clearSearchFilters');
             spyOn(configTable, 'reload');
             template.innerHTML = "<span class='search-icons glyphicon glyphicon-repeat title='Clear Search'></span>";
@@ -761,9 +759,9 @@ describe('configTable', function () {
         });
     });
 
-    describe('clickTable link', function () {
+    describe('clickTable link', function() {
         var event, config, recordId;
-        beforeEach(function () {
+        beforeEach(function() {
             var infoLink =
                 "<span class='glyphicon glyphicon-info-sign blue link-icons' data-action='"
                 + configTable.getInfoAction()
@@ -791,7 +789,7 @@ describe('configTable', function () {
             spyOn(configTable, 'getConfigValues').and.returnValue(config);
         });
 
-        it('should ignore a non-matching event target', function () {
+        it('ignores a non-matching event target', function() {
             spyOn(configTable, 'sendXhr');
             spyOn(configTable, 'redirect');
             spyOn(configTable, 'clearCheckAll');
@@ -807,7 +805,7 @@ describe('configTable', function () {
             expect(configTable.clearCheckAll).not.toHaveBeenCalled();
         });
 
-        it('should redirect to the info page', function () {
+        it('redirects to the info page', function() {
             spyOn(configTable, 'redirect');
 
             event.target = document.querySelector('span[data-action=info]');
@@ -823,7 +821,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should redirect to the edit page', function () {
+        it('redirects to the edit page', function() {
             spyOn(configTable, 'redirect');
 
             event.target = document.querySelector('span[data-action=edit]');
@@ -838,7 +836,7 @@ describe('configTable', function () {
             );
         });
 
-        it('should delete the selected record', function () {
+        it('deletes the selected record', function() {
             spyOn(configTable, 'sendXhr');
             spyOn(configTable, 'clearCheckAll');
 
@@ -857,16 +855,16 @@ describe('configTable', function () {
         });
     });
 
-    describe('clickTable checkbox', function () {
+    describe('clickTable checkbox', function() {
         var event, selectedClass;
-        beforeEach(function () {
+        beforeEach(function() {
             event = {};
             selectedClass = configTable.getSelectedRowClass();
             spyOn(configTable, 'getSelectedRowClass')
                 .and.returnValue(selectedClass);
         });
 
-        it('should add selected row class when checkbox is checked', function () {
+        it('adds the selected row class when checkbox is checked', function() {
             setFixtures('<tr>'
                 + "<td><input type='checkbox' checked='checked' /></td>"
                 + "<td></td>"
@@ -884,7 +882,7 @@ describe('configTable', function () {
             expect(row.classList.contains(selectedClass)).toEqual(true);
         });
 
-        it('should remove selected row class when checkbox is not', function () {
+        it('removes the selected row class when checkbox is not checked', function() {
             setFixtures('<tr class="' + selectedClass + '">'
                 + "<td><input type='checkbox' /></td>"
                 + "<td></td>"
@@ -903,21 +901,21 @@ describe('configTable', function () {
         });
     });
 
-    describe('keyupSearch', function () {
+    describe('keyupSearch', function() {
         var event;
-        beforeEach(function () {
+        beforeEach(function() {
             spyOn(configTable, 'search');
             event = {};
         });
 
-        it('should search when KeyboardEvent.key is [Enter]', function () {
+        it('executes search when KeyboardEvent.key is [Enter]', function() {
             event.key = 'Enter';
 
             configTable.keyupSearch(event);
             expect(configTable.search).toHaveBeenCalledTimes(1);
         });
 
-        it('should not search when KeyboardEvent.key is not [Enter]', function () {
+        it('does not execute search when KeyboardEvent.key is not [Enter]', function() {
             event.key = 'Escape';
 
             configTable.keyupSearch(event);
@@ -929,26 +927,37 @@ describe('configTable', function () {
         value picker       
        ========================================================================
     */
-    describe('value picker', function () {
+    describe('value picker', function() {
         var col1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         var col2 = ['zero', 'one', 'two', 'three', 'four'];
         var pickerCount = col1.length + col2.length
         var selectedClass = '', table = null,
             valuePickers = null, valuePickerCount = 0;
 
-        beforeEach(function () {
+        var clickAllValuePickerItems = function(elementList) {
+            for (var i = 0; i < elementList.length; ++i) {
+                // select **all** picker items => fill input text field
+                var itemList = valuePickers[i].querySelectorAll('div.pickerItem');
+                for (var j = 0; j < itemList.length; ++j) {
+                    itemList[j].dispatchEvent(new Event('click', { bubbles: true }));
+                    // event handler set on parent element node  ^^^^^^^^^^^^^^^^^
+                }
+            }
+        }
+
+        beforeEach(function() {
             selectedClass = configTable.getSelectedSelector();
             setFixtures(
                 "<table id='jquery-data-table'><tfoot></tr>"
                 + "<th rowspan='1' colspan='1'></th>"
-                + "<th><input type='text' data-column-number='1'></th>"
-                + "<th><input type='text' data-column-number='2'></th>"
-                + "<th><input type='text' data-column-number='3'></th>"
-                + "<th><input type='text' data-column-number='4'></th>"
+                + "<th><input type='text' data-column-number='1' /></th>"
+                + "<th><input type='text' data-column-number='2' /></th>"
+                + "<th><input type='text' data-column-number='3' /></th>"
+                + "<th><input type='text' data-column-number='4' /></th>"
                 + '</tr><tfoot></table>'
             );
 
-            spyOn(configTable, 'enterSearchInput');
+            spyOn(configTable, 'enterSearchInput').and.callThrough();
             spyOn(configTable, 'resetValuePicker');
             spyOn(configTable, 'togglePickerItem').and.callThrough();
             spyOn(configTable, 'getSelectedSelector').and.returnValue(selectedClass);
@@ -962,18 +971,18 @@ describe('configTable', function () {
             valuePickerCount = valuePickers.length;
         });
 
-        it('should create the value pickers with correct ids', function () {
+        it('creates the value pickers with correct ids', function() {
             expect(valuePickers.length).toEqual(2);
             expect(valuePickers[0].id).toEqual('valuePickerId__0');
             expect(valuePickers[1].id).toEqual('valuePickerId__1');
         });
 
-        it('should hide the value pickers when created', function () {
+        it('hides the value pickers when created', function() {
             expect(valuePickers[0].style.display).toEqual('none');
             expect(valuePickers[1].style.display).toEqual('none');
         });
 
-        it('should have overflowY style when value pickers child items count is more than 10', function () {
+        it('adds overflowY style when the value picker child item count is greater than 10', function() {
             configTable.addValuePicker(4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
             // querySelectorAll() => non-live NodeList of element objects, so re-query
@@ -989,7 +998,7 @@ describe('configTable', function () {
             expect(localValuePickers[2].children[0].style.overflowY).toEqual('');
         });
 
-        it('should create the value pickers child divs', function () {
+        it('creates the value picker items', function() {
             var columns = [col1.length, col2.length];
 
             for (var i = 0; i < valuePickerCount; ++i) {
@@ -998,7 +1007,7 @@ describe('configTable', function () {
             }
         });
 
-        it('should create the value picker child input button', function () {
+        it('creates the value picker input button', function() {
             for (var i = 0; i < valuePickerCount; ++i) {
                 var button = valuePickers[i].querySelectorAll('input[type=button]');
 
@@ -1007,42 +1016,20 @@ describe('configTable', function () {
             }
         });
 
-        it('should call the focus handler when entering the search fields', function () {
+        it('displays the value picker when entering the search field', function () {
             for (var i = 0; i < valuePickerCount; ++i) {
                 var selector = "th > input[data-column-number='" + (i + 1) + "']";
                 document.querySelector(selector).dispatchEvent(new Event('focus'));
+
+                expect(valuePickers[i].style.display).toEqual('block');
             }
 
             expect(configTable.enterSearchInput.calls.count()).toEqual(2);
         });
 
-        // TODO: add expect() for input text fields
-        it('should call the value picker button click handlers', function () {
-            for (var i = 0; i < valuePickerCount; ++i) {
-                valuePickers[i].querySelector('input[type=button]')
-                    .dispatchEvent(new Event('click'));
-                // select picker items => fill input text field
-                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
-                for (var j = 0; j < elementList.length; ++j) {
-                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
-                    // event handler set on parent element node       ^^^^^^^^^^^^^^^^
-                }
-            }
-
-            expect(configTable.resetValuePicker.calls.count()).toEqual(valuePickers.length);
-            expect(valuePickers[0].style.display).toEqual('none');
-            expect(valuePickers[1].style.display).toEqual('none');
-        });
-
-        it('should call the click handler for each value picker item', function () {
+        it('adds and removes the selected class when a picker item is clicked', function() {
             // first click add 'select' class to each item
-            for (var i = 0; i < valuePickerCount; ++i) {
-                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
-                for (var j = 0; j < elementList.length; ++j) {
-                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
-                    // event handler set on parent element node       ^^^^^^^^^^^^^^^^
-                }
-            }
+            clickAllValuePickerItems(valuePickers);
             expect(configTable.togglePickerItem.calls.count()).toEqual(pickerCount);
             expect(configTable.getSelectedSelector.calls.count()).toEqual(pickerCount);
             for (var i = 0; i < valuePickerCount; ++i) {
@@ -1053,12 +1040,7 @@ describe('configTable', function () {
             }
 
             // second click **REMOVE** 'select' class from each item
-            for (var i = 0; i < valuePickerCount; ++i) {
-                var elementList = valuePickers[i].querySelectorAll('div.pickerItem');
-                for (var j = 0; j < elementList.length; ++j) {
-                    elementList[j].dispatchEvent(new Event('click', { bubbles: true }));
-                }
-            }
+            clickAllValuePickerItems(valuePickers);
             expect(configTable.togglePickerItem.calls.count()).toEqual(pickerCount * 2);
             expect(configTable.getSelectedSelector.calls.count()).toEqual(pickerCount * 2);
             for (var i = 0; i < valuePickerCount; ++i) {
@@ -1067,6 +1049,42 @@ describe('configTable', function () {
                     expect(elementList[j].classList.contains(selectedClass)).toEqual(false);
                 }
             }
+        });
+
+        describe('value picker button', function() {
+            var multiValueFilterSeparator = '|'
+            beforeEach(function() {
+                configTable.setConfigValues({multiValueFilterSeparator: multiValueFilterSeparator});
+                clickAllValuePickerItems(valuePickers);
+
+                for (var i = 0; i < valuePickerCount; ++i) {
+                    valuePickers[i].querySelector('input[type=button]')
+                        .dispatchEvent(new Event('click'));
+                }
+                spyOn(configTable, 'valuePickerButtonClick').and.callThrough();
+            });
+
+            it('populates the search fields with each selected item', function() {
+                var textInputs = document.querySelectorAll('th > input[data-column-number]');
+
+                // HTML fixture
+                expect(textInputs.length).toEqual(4);
+
+                // first two search inputs have selected value picker text
+                expect(textInputs[0].value).toEqual(col1.join(multiValueFilterSeparator));
+                expect(textInputs[1].value).toEqual(col2.join(multiValueFilterSeparator));
+
+                // last two search inputs do **not** have value picker, and are empty
+                expect(textInputs[2].value).toEqual('');
+                expect(textInputs[3].value).toEqual('');
+            });
+
+            it('resets value picker items and hides the value picker', function() {
+                expect(configTable.resetValuePicker.calls.count()).toEqual(valuePickers.length);
+                for (var i = 0; i < valuePickerCount; ++i) {
+                    expect(valuePickers[i].style.display).toEqual('none');
+                }
+            });
         });
     });
 });

@@ -59,7 +59,7 @@ namespace kuujinbo.DataTables.Mvc.Example.Controllers
                 InfoRowUrl = url.Action("Info"),
                 EditRowUrl = url.Action("Update"),
                 DeleteRowUrl = url.Action("DeleteOne"),
-                ScriptPaths = new string[] { url.Content("~/scripts/jQueryDataTablesIndex.js") }
+                ScriptPaths = new string[] { url.Content("~/scripts/dataTablesHome.js") }
             };
             table.SetColumns<TestModel>();
 
