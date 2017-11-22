@@ -6,35 +6,110 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace kuujinbo.DataTables.Tests
 {
-    /* --------------------------------------------------------------------
-     * HTML/JavaScript written to Partial View
-     * --------------------------------------------------------------------
-     */
-    public class TableHtmlWriterTests
+    // M$ code coverage is too stupid to ignore successful Exception testing 
+    [ExcludeFromCodeCoverage]
+    public class TableWriterTests
     {
         private readonly ITestOutputHelper _output;
 
-        public TableHtmlWriterTests(ITestOutputHelper output)
+        public TableWriterTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
+        #region ActionButton
         [Fact]
-        public void ActionButtonsHtml_NoActionButton_WritesEmptyString()
+        public void GetButtonMarkup_BulkAction_ReturnsButtonHtml()
         {
-            var table = new Table();
+            var table = new Table()
+            {
+                ActionButtons = new List<ActionButton>()
+                {
+                    new ActionButton("url", "text")
+                }
+            };
 
-            var result = table.ActionButtonsHtml();
+            var xElement = XElement.Parse(table.GetButtonMarkup().ToHtmlString());
 
-            Assert.Equal(0, table.ActionButtons.Count);
-            Assert.Equal(string.Empty, result);
+            Assert.Equal(2, xElement.Nodes().Count());
+            Assert.Equal("button", xElement.Name);
+            Assert.Equal("url", xElement.Attribute("data-url").Value);
+            Assert.Equal(
+                "text",
+                string.Concat(
+                    xElement.Nodes().OfType<XText>().Select(x => x.Value.Trim())
+                )
+            );
+            Assert.Equal(1, xElement.Elements("span").Count());
         }
 
         [Fact]
-        public void ActionButtonsHtml_ActionButton_WritesHtml()
+        public void GetButtonMarkup_Modal_ReturnsButtonHtml()
+        {
+            var table = new Table()
+            {
+                ActionButtons = new List<ActionButton>()
+                {
+                    new ActionButton("url", "text") { Batch = false, Modal = true }
+                }
+            };
+
+            var xElement = XElement.Parse(table.GetButtonMarkup().ToHtmlString());
+
+            Assert.Equal(2, xElement.Nodes().Count());
+            Assert.Equal("button", xElement.Name);
+            Assert.Equal("url", xElement.Attribute("data-url").Value);
+            Assert.Equal(
+                "text",
+                string.Concat(
+                    xElement.Nodes().OfType<XText>().Select(x => x.Value.Trim())
+                )
+            );
+            Assert.Equal(1, xElement.Elements("span").Count());
+            Assert.NotNull(xElement.Attribute(ActionButton.ModalAttribute));
+        }
+
+        [Fact]
+        public void GetButtonMarkup_NotBulkAction_ReturnsHyperlinkHtml()
+        {
+            var table = new Table()
+            {
+                ActionButtons = new List<ActionButton>()
+                {
+                    new ActionButton("url", "text") { Batch = false }
+                }
+            };
+
+            var xElement = XElement.Parse(table.GetButtonMarkup().ToHtmlString());
+
+            Assert.Equal(0, xElement.Elements().Count());
+            Assert.Equal("a", xElement.Name);
+            Assert.Equal("url", xElement.Attribute("href").Value);
+            Assert.Equal(
+                "text",
+                string.Concat(
+                    xElement.Nodes().OfType<XText>().Select(x => x.Value.Trim())
+                )
+            );
+        }
+
+        [Fact]
+        public void RenderActionButtons_NoActionButton_WritesEmptyString()
+        {
+            var table = new Table();
+
+            var result = table.RenderActionButtons();
+
+            Assert.Equal(0, table.ActionButtons.Count);
+            Assert.Equal(string.Empty, result.ToHtmlString());
+        }
+
+        [Fact]
+        public void RenderActionButtons_ActionButton_WritesHtml()
         {
             var table = new Table()
             {
@@ -46,47 +121,45 @@ namespace kuujinbo.DataTables.Tests
             };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.ActionButtonsHtml()
+                "<div>{0}</div>", table.RenderActionButtons()
             ));
 
             Assert.Equal(2, table.ActionButtons.Count);
             Assert.Equal(2, xElement.Nodes().Count());
         }
+        #endregion
 
-        /* ===================================================================
-         * writing the table thead and tfoot (TableHtmlWriter.cs partial class)
-         * ===================================================================
-         */
+        #region thead and tfoot (TableHtmlWriter.cs partial class)
         [Fact]
-        public void GetGetTableHtml_NullColumns_ThrowsArgumentNullException()
+        public void RenderTable_NullColumns_ThrowsArgumentNullException()
         {
             var table = new Table();
             var exception = Assert.Throws<ArgumentNullException>(
-                () => table.GetTableHtml()
+                () => table.RenderTable()
             );
 
             Assert.Equal<string>("Columns", exception.ParamName);
         }
 
         [Fact]
-        public void GetGetTableHtml_EmptyColumns_ThrowsArgumentNullException()
+        public void RenderTable_EmptyColumns_ThrowsArgumentNullException()
         {
             var table = new Table() { Columns = new List<Column>() };
             var exception = Assert.Throws<ArgumentNullException>(
-                () => table.GetTableHtml()
+                () => table.RenderTable()
             );
 
             Assert.Equal<string>("Columns", exception.ParamName);
         }
 
         [Fact]
-        public void GetGetTableHtml_IsSearchableFalse_AddsEmptyDataSetAttribute()
+        public void RenderTable_IsSearchableFalse_AddsEmptyDataSetAttribute()
         {
             var columns = new List<Column>() { new Column() };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
             var expectedDataSet = xElement.XPathSelectElement("//th[@data-is-searchable]");
 
@@ -97,13 +170,13 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_IsSearchableTrue_AddsDataSetAttributeValue()
+        public void RenderTable_IsSearchableTrue_AddsDataSetAttributeValue()
         {
             var columns = new List<Column>() { new Column() { IsSearchable = true } };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
             var expectedDataSet = xElement.XPathSelectElement("//th[@data-is-searchable]");
 
@@ -114,17 +187,17 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_ColumnDisplayWidth_AddsInlineStyleToThead()
+        public void RenderTable_ColumnDisplayWidth_AddsInlineStyleToThead()
         {
             var columns = new List<Column>()
-            { 
-                new Column() { Display = true } ,
-                new Column() { Display = true, DisplayWidth = 20 } 
-            };
+        {
+            new Column() { Display = true } ,
+            new Column() { Display = true, DisplayWidth = 20 }
+        };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
 
             var theads = xElement.XPathSelectElements("//thead/tr/th");
@@ -141,13 +214,13 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_BoolPropertyType_AddsSelectFilterToTfoot()
+        public void RenderTable_BoolPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>() { new Column() { Type = typeof(bool) } };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
             var expectedDataSet = xElement.XPathSelectElement("//th[@data-is-searchable]");
 
@@ -173,16 +246,16 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_NullableBoolPropertyType_AddsSelectFilterToTfoot()
+        public void RenderTable_NullableBoolPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>()
-            { 
-                new Column() { Type = typeof(bool?), IsSearchable = true } 
-            };
+        {
+            new Column() { Type = typeof(bool?), IsSearchable = true }
+        };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
 
             var expectedDataSet = xElement.XPathSelectElement("//th[@data-is-searchable]");
@@ -209,17 +282,17 @@ namespace kuujinbo.DataTables.Tests
 
         public enum TestEnum { OneTwo, ThreeFour }
         [Fact]
-        public void GetGetTableHtml_EnumPropertyType_AddsSelectFilterToTfoot()
+        public void RenderTable_EnumPropertyType_AddsSelectFilterToTfoot()
         {
             var columns = new List<Column>()
-            { 
-                new Column() { Type = typeof(TestEnum) },
-                new Column() { Type = typeof(TestEnum), IsSearchable = true } 
-            };
+        {
+            new Column() { Type = typeof(TestEnum) },
+            new Column() { Type = typeof(TestEnum), IsSearchable = true }
+        };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
 
             var expectedDataSet = xElement.XPathSelectElements("//th[@data-is-searchable]");
@@ -249,13 +322,13 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_AnyOtherPropertyType_AddsTextInputFiltersToTfoot()
+        public void RenderTable_AnyOtherPropertyType_AddsTextInputFiltersToTfoot()
         {
             var columns = new List<Column>() { new Column() };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
 
             var input = xElement.XPathSelectElement("//input[@type='text']");
@@ -268,13 +341,13 @@ namespace kuujinbo.DataTables.Tests
         }
 
         [Fact]
-        public void GetGetTableHtml_LastTh_AddsSpansToTfoot()
+        public void RenderTable_LastTh_AddsSpansToTfoot()
         {
             var columns = new List<Column>() { new Column() };
             var table = new Table() { Columns = columns };
 
             var xElement = XElement.Parse(string.Format(
-                "<div>{0}</div>", table.GetTableHtml()
+                "<div>{0}</div>", table.RenderTable()
             ));
 
             var lastTh = xElement.XPathSelectElement("//tfoot/tr/th[last()]");
@@ -291,13 +364,14 @@ namespace kuujinbo.DataTables.Tests
             }
             Assert.False(string.IsNullOrWhiteSpace(spans.ElementAt(spanCount - 1).Attribute("id").Value));
         }
+        #endregion
 
         [Fact]
         public void GetJavaScriptConfig_DataUrlIsNull_ThrowsArgumentNullException()
         {
             var table = new Table();
             var exception = Assert.Throws<ArgumentNullException>(
-                () => new Table().GetJavaScriptConfig()
+                () => new Table().RenderJavaScriptConfig()
             );
 
             Assert.Equal<string>("DataUrl", exception.ParamName);
@@ -309,7 +383,7 @@ namespace kuujinbo.DataTables.Tests
             var table = new Table() { DataUrl = string.Empty };
 
             var exception = Assert.Throws<ArgumentNullException>(
-                () => table.GetJavaScriptConfig()
+                () => table.RenderJavaScriptConfig()
             );
 
             Assert.Equal<string>("DataUrl", exception.ParamName);
@@ -320,8 +394,8 @@ namespace kuujinbo.DataTables.Tests
         {
             var table = new Table() { DataUrl = "/" };
 
-            var json = table.GetJavaScriptConfig();
-            dynamic d = JObject.Parse(json);
+            var json = table.RenderJavaScriptConfig();
+            dynamic d = JObject.Parse(json.ToHtmlString());
             Assert.Equal<string>(table.DataUrl, d.dataUrl.ToString());
             Assert.Equal<string>("", d.infoRowUrl.ToString());
             Assert.Equal<string>("", d.deleteRowUrl.ToString());
@@ -343,8 +417,8 @@ namespace kuujinbo.DataTables.Tests
                 MultiValueFilterSeparator = '?'
             };
 
-            var json = table.GetJavaScriptConfig();
-            dynamic d = JObject.Parse(json);
+            var json = table.RenderJavaScriptConfig();
+            dynamic d = JObject.Parse(json.ToHtmlString());
             Assert.Equal<string>(table.InfoRowUrl, d.infoRowUrl.ToString());
             Assert.Equal<string>(table.DeleteRowUrl, d.deleteRowUrl.ToString());
             Assert.Equal<string>(table.EditRowUrl, d.editRowUrl.ToString());
@@ -361,8 +435,8 @@ namespace kuujinbo.DataTables.Tests
             };
             table.SetColumns<TestModel>();
 
-            var json = table.GetJavaScriptConfig();
-            dynamic d = JObject.Parse(json);
+            var json = table.RenderJavaScriptConfig();
+            dynamic d = JObject.Parse(json.ToHtmlString());
             var names = d.columnNames.ToObject<string[]>();
 
             Assert.Equal(table.ColumnNames[0], names[0]);
@@ -377,24 +451,24 @@ namespace kuujinbo.DataTables.Tests
         {
             var table = new Table();
 
-            Assert.Equal(string.Empty, table.GetScriptElements());
+            Assert.Equal(string.Empty, table.RenderCustomScriptPaths().ToHtmlString());
         }
 
         [Fact]
         public void GetScriptElements_ScriptPathsEmptyReturnsStringEmpty()
         {
-            var table = new Table() { ScriptPaths = new string[] { } };
+            var table = new Table() { CustomScriptPaths = new string[] { } };
 
-            Assert.Equal(string.Empty, table.GetScriptElements());
+            Assert.Equal(string.Empty, table.RenderCustomScriptPaths().ToHtmlString());
         }
 
         [Fact]
         public void GetScriptElements_ScriptPathsNotEmptyReturnsScriptTags()
         {
             var scripts = new string[] { "0.js", "1.js", "2.js", "3.js", "4.js" };
-            var table = new Table() { ScriptPaths = scripts };
+            var table = new Table() { CustomScriptPaths = scripts };
 
-            var result = table.GetScriptElements().Split(
+            var result = table.RenderCustomScriptPaths().ToHtmlString().Split(
                 new string[] { "\n" },
                 StringSplitOptions.RemoveEmptyEntries
             );

@@ -41,13 +41,13 @@ namespace kuujinbo.DataTables.Mvc.Example.Controllers
                 {
                     new ActionButton(url.Action("Create"), "Create")
                     { 
-                        BulkAction = false
+                        Batch = false
                     }
                     ,
                     new ActionButton(url.Action("Report"), "Report")
                     { 
                         CssClass = ActionButton.Primary,
-                        BulkAction = false,
+                        Batch = false,
                         Modal = true
                     },
                     new ActionButton(url.Action("Delete"), "Delete")
@@ -59,7 +59,7 @@ namespace kuujinbo.DataTables.Mvc.Example.Controllers
                 InfoRowUrl = url.Action("Info"),
                 EditRowUrl = url.Action("Update"),
                 DeleteRowUrl = url.Action("DeleteOne"),
-                ScriptPaths = new string[] { url.Content("~/scripts/dataTablesHome.js") }
+                CustomScriptPaths = new string[] { url.Content("~/scripts/dataTablesHome.js") }
             };
             table.SetColumns<TestModel>();
 
@@ -172,7 +172,7 @@ namespace kuujinbo.DataTables.Mvc.Example.Controllers
 
         /* ====================================================================
          * actions that support per-view custom JavaScript:
-         * JqueryDataTables.Table.ScriptPaths
+         * JqueryDataTables.Table.CustomScriptPaths
          * ====================================================================
          */
         [HttpGet]

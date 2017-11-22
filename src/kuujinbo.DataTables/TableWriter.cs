@@ -1,26 +1,64 @@
-﻿using kuujinbo.DataTables.Utils;
-using kuujinbo.DataTables.Json;
-/* ============================================================================
- * HTML/JavaScript written to Partial View:
- * ~/views/shared/_jQueryDataTables.cshtml
- * ============================================================================
- */
+﻿using kuujinbo.DataTables.Json;
+using kuujinbo.DataTables.Utils;
 using System;
 using System.Linq;
 using System.Text;
+using System.Web.Mvc;
 
+/// <summary>
+/// HTML/JavaScript written to Partial View: ~/views/shared/_jQueryDataTables.cshtml
+/// </summary>
 namespace kuujinbo.DataTables
 {
     public partial class Table
     {
-        public string ActionButtonsHtml()
+        #region action button
+        /// <summary>
+        /// Render markup for Action button(s)
+        /// </summary>
+        public MvcHtmlString RenderActionButtons()
         {
             return ActionButtons.Count > 0
-                ? string.Join("", ActionButtons.Select(x => x.GetHtml()))
-                : string.Empty;
+                ? GetButtonMarkup()
+                : new MvcHtmlString(string.Empty);
         }
 
-        public string GetTableHtml()
+        /// <summary>
+        /// Get Action button(s) markup
+        /// </summary>
+        public MvcHtmlString GetButtonMarkup()
+        {
+            var builder = new StringBuilder();
+            foreach (var button in ActionButtons)
+            {
+                if (button.Batch)
+                {
+                    builder.AppendFormat(
+                        "<button class='{0}' data-url='{1}'>{2} <span></span></button>\n",
+                        button.CssClass, button.Url, button.Text
+                    );
+                }
+                else if (button.Modal)
+                {
+                    builder.AppendFormat(
+                        "<button class='{0}' data-url='{1}' {2}=''>{3} <span></span></button>\n",
+                        button.CssClass, button.Url, ActionButton.ModalAttribute, button.Text
+                    );
+                }
+                else
+                {
+                    builder.AppendFormat(
+                        "<a class='{0}' href='{1}'>{2}</a>\n",
+                        button.CssClass, button.Url, button.Text
+                    );
+                }
+            }
+
+            return new MvcHtmlString(builder.ToString());
+        }
+        #endregion
+
+        public MvcHtmlString RenderTable()
         {
             if (Columns == null || Columns.Count() < 1)
             {
@@ -28,18 +66,18 @@ namespace kuujinbo.DataTables
             }
 
             var showCheckboxColumn = ShowCheckboxColumn();
-            StringBuilder s = new StringBuilder("<thead><tr>");
-            GetTheadHtml(s, showCheckboxColumn);
-            s.AppendLine("</tr></thead>");
+            var builder = new StringBuilder("<thead><tr>");
+            GetThead(builder, showCheckboxColumn);
+            builder.AppendLine("</tr></thead>");
 
-            s.AppendLine("<tfoot><tr>");
-            GetTfootHtml(s, showCheckboxColumn);
-            s.Append("</tr></tfoot>");
+            builder.AppendLine("<tfoot><tr>");
+            GetTfoot(builder, showCheckboxColumn);
+            builder.Append("</tr></tfoot>");
 
-            return s.ToString();
+            return new MvcHtmlString(builder.ToString());
         }
 
-        private void GetTheadHtml(StringBuilder s, bool showCheckboxColumn)
+        private void GetThead(StringBuilder s, bool showCheckboxColumn)
         {
             s.AppendLine(@"
 <th style='white-space:nowrap;text-align:left !important;padding:2px !important'>
@@ -50,7 +88,7 @@ namespace kuujinbo.DataTables
             foreach (var c in Columns)
             {
                 var widthCss = c.DisplayWidth == 0
-                    ? ""
+                    ? string.Empty
                     : string.Format(" style='width:{0}%'", c.DisplayWidth);
                 if (c.Display) s.AppendFormat("<th{0}>{1}</th>\n", widthCss, c.Name);
             }
@@ -58,7 +96,7 @@ namespace kuujinbo.DataTables
             s.AppendLine("<th></th>");
         }
 
-        private void GetTfootHtml(StringBuilder s, bool showCheckboxColumn)
+        private void GetTfoot(StringBuilder s, bool showCheckboxColumn)
         {
             // first column checkbox, so we start at 1 instead of 0
             var i = 1;
@@ -116,12 +154,12 @@ class='form-control input-sm' type='text' placeholder='Search' /></th>"
             s.Append("</th>");
         }
 
-        public string GetJavaScriptConfig()
+        public MvcHtmlString RenderJavaScriptConfig()
         {
             if (string.IsNullOrEmpty(DataUrl))
                 throw new ArgumentNullException("DataUrl");
 
-            return new JsonNetSerializer().Get(new
+            return new MvcHtmlString(new JsonNetSerializer().Get(new
             {
                 dataUrl = DataUrl,
                 infoRowUrl = InfoRowUrl,
@@ -130,23 +168,23 @@ class='form-control input-sm' type='text' placeholder='Search' /></th>"
                 showCheckboxColumn = ShowCheckboxColumn(),
                 columnNames = ColumnNames,
                 multiValueFilterSeparator = MultiValueFilterSeparator
-            });
+            }));
         }
 
-        public string GetScriptElements()
+        public MvcHtmlString RenderCustomScriptPaths()
         {
-            if (ScriptPaths != null)
+            if (CustomScriptPaths != null)
             {
                 var s = new StringBuilder();
-                var scripts = ScriptPaths.Length;
+                var scripts = CustomScriptPaths.Length;
                 for (int i = 0; i < scripts; ++i) 
                 {
-                    s.AppendFormat("<script src='{0}'></script>\n", ScriptPaths[i]);
+                    s.AppendFormat("<script src='{0}'></script>\n", CustomScriptPaths[i]);
                 }
-                return s.ToString();
+                return new MvcHtmlString(s.ToString());
             }
 
-            return string.Empty;
+            return new MvcHtmlString(string.Empty);
         }
     }
 }

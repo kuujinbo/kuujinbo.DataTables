@@ -7,7 +7,7 @@ namespace kuujinbo.DataTables.Mvc.Example.Models
         FullTime, PartTime
     }
 
-    public class TestModel : IIdentifiable
+    public class TestModel : IIdentifier
     {
         public int Id { get; set; }
         [Column(DisplayOrder = 1)]

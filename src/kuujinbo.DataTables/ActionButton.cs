@@ -2,18 +2,15 @@
 
 namespace kuujinbo.DataTables
 {
+    /// <summary>
+    /// All buttons use bootstrap CSS, with following action types:
+    /// -- 'bulk' action => MVC action processes one or more selected records
+    ///     in the DataTable.
+    /// -- simple hyperlink => e.g to a Create action
+    /// -- jQuery modal => informational text or partial view
+    /// </summary>
     public sealed class ActionButton
     {
-        /* --------------------------------------------------------------------
-         * all buttons styled with bootstrap CSS, with following action types:
-         * -- 'bulk' action => MVC action acts on one or more selected records
-         *    in the DataTable.
-         * 
-         * -- simple hyperlink => e.g to a Create action
-         * 
-         * -- jQuery modal => informational text or partial view
-         * --------------------------------------------------------------------
-         */
         // darker blue
         public const string Primary = "btn btn-primary";
         // green
@@ -34,12 +31,10 @@ namespace kuujinbo.DataTables
         public const string ModalAttribute = "data-modal";
 
         /// <summary>
-        /// button performs 'bulk' action on one or more records
-        /// </summary>
-        /// <remarks>
+        /// Button performs batch action on more than one record.
         /// default => true (see constructor)
-        /// </remarks>
-        public bool BulkAction { get; set; }
+        /// </summary>
+        public bool Batch { get; set; }
 
         /// <summary>
         /// button class: default => Success (see constructor)
@@ -56,37 +51,8 @@ namespace kuujinbo.DataTables
 
             Url = url;
             Text = text;
-            BulkAction = true;
+            Batch = true;
             CssClass = Success;
-        }
-
-        /// <summary>
-        /// generate button markup
-        /// </summary>
-        /// <returns>HTML markup</returns>
-        public string GetHtml()
-        {
-            if (BulkAction)
-            {
-                return string.Format(
-                    "<button class='{0}' data-url='{1}'>{2} <span></span></button>\n",
-                    CssClass, Url, Text
-                );
-            }
-            else if (Modal)
-            {
-                return string.Format(
-                    "<button class='{0}' data-url='{1}' {2}=''>{3} <span></span></button>\n",
-                    CssClass, Url, ModalAttribute, Text
-                );
-            }
-            else
-            {
-                return string.Format(
-                    "<a class='{0}' href='{1}'>{2}</a>\n",
-                    CssClass, Url, Text
-                );
-            }
         }
     }
 }

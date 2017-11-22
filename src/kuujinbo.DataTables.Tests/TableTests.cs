@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 namespace kuujinbo.DataTables.Tests
 {
     #region test models
-    public class TestModel : IIdentifiable
+    public class TestModel : IIdentifier
     {
         public TestModel()
         {

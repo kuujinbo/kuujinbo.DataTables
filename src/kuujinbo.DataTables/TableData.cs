@@ -7,14 +7,69 @@ using System.Web.Mvc;
 namespace kuujinbo.DataTables
 {
     [ModelBinder(typeof(ModelBinder))]
-    public partial class Table : ITable
+    public partial class TableData : ITableData
     {
-        public Table()
+        public TableData(IEnumerable<IColumnData> columns)
         {
             ActionButtons = new List<ActionButton>();
             SortOrders = new List<SortOrder>();
             MultiValueFilterSeparator = '|';
+            Columns = columns;
+            SetColumnNames();
         }
+
+        private void SetColumnNames()
+        {
+            ColumnNames = new string[Columns.Count()];
+            for (int i = 0; i < ColumnNames.Length; ++i)
+            {
+                ColumnNames[i] = Columns.ElementAt(i).Name;
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<ActionButton> ActionButtons { get; set; }
+
+        #region interface property implementation
+        public int Draw { get; set; }
+
+        public int RecordsTotal { get; set; }
+
+        public int RecordsFiltered { get; set; }
+
+        public bool SaveAs { get; set; }
+
+        public string[] ColumnNames { get; set; }
+
+        public IEnumerable<IColumnData> Columns { get; set; }
+
+        public List<List<object>> Data { get; set; }
+        #endregion
+
+        #region URLs
+        /// <summary>
+        /// URL that returns table data
+        /// </summary>
+        public string TableDataUrl { get; set; }
+
+        /// <summary>
+        /// Row delete URL
+        /// </summary>
+        public string RowDeleteUrl { get; set; }
+
+        /// <summary>
+        /// Row edit URL
+        /// </summary>
+        public string RowEditUrl { get; set; }
+
+        /// <summary>
+        /// Row details URL
+        /// </summary>
+        public string RowDetailsUrl { get; set; }
+        #endregion
 
         /// <summary>
         /// separator character; exact match multi-value filter(s)
@@ -25,14 +80,7 @@ namespace kuujinbo.DataTables
         /// </remarks>
         public char MultiValueFilterSeparator { get; set; } 
 
-        public int Draw { get; set; }
-        public int RecordsTotal { get; set; }
-        public int RecordsFiltered { get; set; }
-        public List<List<object>> Data { get; set; }
-
         public bool CheckboxColumn { get; set; }
-        public bool SaveAs { get; set; }
-        public string[] ColumnNames { get; set; }
 
         /// <summary>
         /// Script paths to custom client-side table processing.
@@ -62,20 +110,12 @@ namespace kuujinbo.DataTables
             set { _length = value; }
         }
 
-        public string DataUrl { get; set; }
-        public string DeleteRowUrl { get; set; }
-        public string EditRowUrl { get; set; }
-        public string InfoRowUrl { get; set; }
+
 
         // global search
         public Search Search { get; set; }
 
         public IEnumerable<SortOrder> SortOrders { get; set; }
-
-
-        public IEnumerable<Column> Columns { get; set; }
-        
-        public IList<ActionButton> ActionButtons { get; set; }
 
         /// <summary>
         /// first column only shown in **web UI** when one or more 'bulk'
@@ -85,51 +125,6 @@ namespace kuujinbo.DataTables
         public bool ShowCheckboxColumn()
         {
             return ActionButtons.Where(x => x.Batch).Count() > 0;
-        }
-
-        /// <summary>
-        /// set table columns that generate partial view HTML markup
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <remarks>
-        /// call method on **initial** HTTP request to setup Table instance
-        /// 
-        /// also see:
-        ///     -- Columns property
-        ///     -- GetThead()
-        ///     -- GetTfoot()
-        /// </remarks>
-        public void SetColumns<T>() where T : class
-        {
-            // tuple used instead of creating a custom class
-            IEnumerable<Tuple<PropertyInfo, ColumnAttribute>> typeInfo = GetTypeInfo(typeof(T));
-
-            var columns = new List<Column>();
-            foreach (var info in typeInfo)
-            {
-                var column = new Column
-                {
-                    Name = info.Item2.DisplayName ?? info.Item1.Name,
-                    Display = info.Item2.Display,
-                    IsSearchable = info.Item2.IsSearchable,
-                    IsSortable = info.Item2.IsSortable,
-                    DisplayWidth = info.Item2.DisplayWidth,
-                    Type = info.Item1.PropertyType
-                };
-                columns.Add(column);
-            }
-
-            this.Columns = columns;
-            SetColumnNames();
-        }
-
-        private void SetColumnNames()
-        {
-            ColumnNames = new string[Columns.Count()];
-            for (int i = 0; i < ColumnNames.Length; ++i) 
-            {
-                ColumnNames[i] = Columns.ElementAt(i).Name;
-            }
         }
 
         /// <summary>
@@ -157,7 +152,7 @@ namespace kuujinbo.DataTables
             {
                 var column = Columns.ElementAt(i);
                 if (column.Search != null
-                    && column.IsSearchable
+                    && column.Searchable
                     && !string.IsNullOrWhiteSpace(column.Search.Value))
                 {
                     var tuple = typeInfo.ElementAt(column.Search.ColumnIndex);
@@ -199,7 +194,7 @@ namespace kuujinbo.DataTables
             foreach (var sortOrder in SortOrders)
             {
                 var column = Columns.ElementAt(sortOrder.ColumnIndex);
-                if (column.IsSortable)
+                if (column.Sortable)
                 {
                     var tuple = typeInfo.ElementAt(sortOrder.ColumnIndex);
                     sortedData = sortOrder.Direction == ModelBinder.ORDER_ASC
@@ -274,6 +269,7 @@ namespace kuujinbo.DataTables
         /// <param name="entity">model/entity instance</param>
         /// <param name="propertyInfo">PropertyInfo</param>
         /// <param name="columnAttribute">ColumnAttribute</param>
+        /// <param name="cache"><property name, <objectId, property value>></param>
         /// <returns>
         /// entity property value object - LINQ to Entities can properly sort
         /// and search by object value. 
@@ -281,7 +277,8 @@ namespace kuujinbo.DataTables
         private object GetPropertyValue<T>(
             T entity,
             PropertyInfo propertyInfo,
-            ColumnAttribute columnAttribute) where T : class, IIdentifier
+            ColumnAttribute columnAttribute
+        ) where T : class, IIdentifier
         {
             object data;
 

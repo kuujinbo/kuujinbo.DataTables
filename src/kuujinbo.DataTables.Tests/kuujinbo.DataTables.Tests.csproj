@@ -110,7 +110,7 @@
     <Compile Include="Json\WriteEnumConverterTests.cs" />
     <Compile Include="Mvc\MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TableHtmlWriterTests.cs" />
+    <Compile Include="TableWriterTests.cs" />
     <Compile Include="TableSettingsTests.cs" />
     <Compile Include="TableTests.cs" />
     <Compile Include="Utils\DateFormatValidatorTests.cs" />
