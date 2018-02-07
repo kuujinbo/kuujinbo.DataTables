@@ -31,3 +31,9 @@
 }();
 
 customFilter.setupCustomFilters();
+
+
+$('#jquery-data-table tbody').on('click', 'tr', function () {
+    var data = table.row(this).data();
+    console.log('You clicked on ' + data[0] + '\'s row');
+});
